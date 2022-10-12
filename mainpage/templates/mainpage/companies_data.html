@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+  <title>Companies data</title>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">Main page</a>
+<!--        <form class="d-flex" role="search">-->
+<!--          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">-->
+<!--          <button class="btn btn-outline-success" type="submit">Search</button>-->
+<!--        </form>-->
+      </div>
+    </div>
+  </nav>
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Conmapy name</th>
+        <th>CIK number</th>
+        <th>Ticker</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for company in companies %}
+        <tr>
+          <td><a href = "/companies_data/{{company.cik_str}}"> {{ company.title }}</a></td>
+          <td>{{ company.cik_str }}</td>
+          <td>{{ company.ticker }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% if companies.has_other_pages %}
+    <ul class="pagination">
+      {% if companies.has_previous %}
+        <li><a class="page-link" href="?page={{ companies.previous_page_number }}">&laquo;</a></li>
+      {% else %}
+        <li><span>&laquo;</span></li>
+      {% endif %}
+      {% for i in companies.paginator.page_range %}
+        {% if companies.number == i %}
+          <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only"></span></span></li>
+        {% else %}
+          <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+      {% endfor %}
+      {% if companies.has_next %}
+        <li><a class="page-link" href="?page={{ companies.next_page_number }}">&raquo;</a></li>
+      {% else %}
+        <li class="page-link"><span>&raquo;</span></li>
+      {% endif %}
+    </ul>
+  {% endif %}
+</body>
+</html>

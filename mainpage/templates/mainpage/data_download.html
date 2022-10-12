@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <form class="box"  method="post" >
+                        {% csrf_token %}
+                        <h5>Ви хочете видалити ?</h5>
+                        <input type="submit" value="Видалити">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
