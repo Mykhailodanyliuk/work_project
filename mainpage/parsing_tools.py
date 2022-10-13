@@ -51,4 +51,7 @@ async def get_all_data_urls(urls, limit=5000):
 
 
 def get_json_from_request(url):
-    return json.loads((requests.get(url, headers=headers)).text)
+    try:
+        return json.loads((requests.get(url, headers=headers)).text)
+    except:
+        pass

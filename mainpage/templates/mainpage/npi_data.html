@@ -11,8 +11,14 @@
             <a class="navbar-brand" href="/">Main page</a>
         </div>
     </nav>
-
+    <h1>Updated: {{updated_time}}</h1>
   <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>CIK</th>
+        <th>NPI numbers</th>
+      </tr>
+    </thead>
     <tbody>
       {% for data in npi_data %}
         <tr>

@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.contrib import messages
-from . import parsers
+from mainpage import parsers
 from json2html import *
+
+update_in_process = False
+
 
 def error_404(request, exception):
     return render(request, 'mainpage/404.html')
@@ -17,13 +20,12 @@ def index(request):
 
 
 def update_data(request):
-    parsers.delete_and_download_data()
+    parsers.update_data()
     return render(request, 'mainpage/data_update.html')
 
+
 def download_data(request):
-    if request.method == 'POST':
-        parsers.delete_and_download_data()
-        return redirect('/')
+    parsers.delete_and_download_data()
     return render(request, 'mainpage/data_download.html')
 
 
@@ -37,14 +39,7 @@ def get_company_data(request, cik):
     c_data = {}
     if not company_data:
         company_data = col.find_one({'cik': cik.zfill(10)})
-    # company_data['']
     if company_data:
-        for key, value in company_data.items():
-            if type(value) == list:
-                try:
-                    company_data[key] = ','.join(value)
-                except TypeError:
-                    pass
         return render(request, 'mainpage/company_data.html', context={'dataset': company_data})
 
 
@@ -58,9 +53,11 @@ def get_list_companies_page(request):
         companies = paginator.page(1)
     except EmptyPage:
         companies = paginator.page(paginator.num_pages)
-    return render(request, 'mainpage/companies_data.html', {'companies': companies})
+    updated_time = parsers.get_collection_from_db('db', 'update_collection').find_one().get('last_update')
+    return render(request, 'mainpage/companies_data.html', {'companies': companies, 'updated_time': updated_time})
 
 
 def get_list_npi_data(request):
     npi_data = parsers.get_all_data_from_collection('npi_data')
-    return render(request, 'mainpage/npi_data.html', {'npi_data': npi_data})
+    updated_time = parsers.get_collection_from_db('db', 'update_collection').find_one().get('last_update')
+    return render(request, 'mainpage/npi_data.html', {'npi_data': npi_data, 'updated_time': updated_time})
