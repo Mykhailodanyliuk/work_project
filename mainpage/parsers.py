@@ -112,5 +112,5 @@ def update_data():
 
 # write_all_data_parser2(get_all_data_from_collection('companies'))
 if __name__ == '__main__':
-    # update_data()
-    print(get_collection_from_db('db', 'update_collection').find_one().get('last_update'))
+    update_data()
+    # print(get_collection_from_db('db', 'update_collection').find_one().get('last_update'))
