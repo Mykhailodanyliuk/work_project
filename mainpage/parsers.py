@@ -4,7 +4,7 @@ import time, datetime
 
 import jellyfish
 import pymongo
-from mainpage import parsing_tools
+from . import parsing_tools
 
 
 def drop_collection_from_db(data_base, collection):
