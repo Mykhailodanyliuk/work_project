@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.contrib import messages
-from . import parsers
+from work_project.mainpage import parsers
 from json2html import *
 
 update_in_process = False
