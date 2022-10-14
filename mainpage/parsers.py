@@ -1,10 +1,10 @@
 import json
 import asyncio
 import time, datetime
-
 import jellyfish
 import pymongo
 from . import parsing_tools
+import pytz
 
 
 def drop_collection_from_db(data_base, collection):
@@ -113,7 +113,7 @@ def update_data():
         # print(len(last_data), len(new_data), len(new_companies_list))
         write_all_data_parser3(new_companies_list)
     update_collection = get_collection_from_db('db', 'update_collection')
-    now = datetime.datetime.now()
+    now = datetime.datetime.now(pytz.timezone('Europe/Kiev'))
     dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
     update_collection.insert_one({'name': 'last_update', 'update_time': dt_string})
 
