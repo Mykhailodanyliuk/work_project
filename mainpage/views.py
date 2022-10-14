@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.contrib import messages
-from work_project.mainpage import parsers
+from . import parsers
 from json2html import *
 
 update_in_process = False
@@ -53,11 +53,18 @@ def get_list_companies_page(request):
         companies = paginator.page(1)
     except EmptyPage:
         companies = paginator.page(paginator.num_pages)
-    updated_time = parsers.get_collection_from_db('db', 'update_collection').find_one().get('last_update')
-    return render(request, 'mainpage/companies_data.html', {'companies': companies, 'updated_time': updated_time})
+    updated_time = parsers.get_collection_from_db('db', 'update_collection').find_one({'name': 'last_update'}).get(
+        'update_time')
+    count_new_companies = parsers.get_collection_from_db('db', 'update_collection').find_one({'name': 'new_companies'}).get(
+        'count_new_companies')
+    return render(request, 'mainpage/companies_data.html', {'companies': companies, 'updated_time': updated_time, 'count_new_companies': count_new_companies})
 
 
 def get_list_npi_data(request):
     npi_data = parsers.get_all_data_from_collection('npi_data')
-    updated_time = parsers.get_collection_from_db('db', 'update_collection').find_one().get('last_update')
-    return render(request, 'mainpage/npi_data.html', {'npi_data': npi_data, 'updated_time': updated_time})
+    updated_time = parsers.get_collection_from_db('db', 'update_collection').find_one({'name': 'last_update'}).get(
+        'update_time')
+    count_new_npis = parsers.get_collection_from_db('db', 'update_collection').find_one(
+        {'name': 'new_npis'}).get(
+        'count_new_npis')
+    return render(request, 'mainpage/npi_data.html', {'npi_data': npi_data, 'updated_time': updated_time, 'count_new_npis': count_new_npis})

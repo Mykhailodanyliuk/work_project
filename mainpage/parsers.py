@@ -4,7 +4,7 @@ import time, datetime
 
 import jellyfish
 import pymongo
-from work_project.mainpage import parsing_tools
+from . import parsing_tools
 
 
 def drop_collection_from_db(data_base, collection):
@@ -37,12 +37,17 @@ def get_all_data_from_collection(collection):
 
 
 def write_all_data_parser2(companies_data):
+    companies_collection = get_collection_from_db('db', 'companies')
     companies_data_collection = get_collection_from_db('db', 'companies_data')
     ciks = [str(block.get('cik_str')).zfill(10) for block in companies_data]
     urls = [f'https://data.sec.gov/submissions/CIK{cik}.json' for cik in ciks]
     results = asyncio.run(parsing_tools.get_all_data_urls(urls, 2))
     for index, result in enumerate(results):
-        companies_data_collection.insert_one(result)
+        print(type(result))
+        if companies_collection.find_one({'str_cik': int(result.get('sic'))}) is None:
+            companies_data_collection.insert_one(result)
+    update_collection = get_collection_from_db('db', 'update_collection')
+    update_collection.insert_one({'name': 'new_companies', 'count_new_companies': len(results)})
 
 
 def write_all_data_parser3(companies_data):
@@ -83,8 +88,12 @@ def write_all_data_parser3(companies_data):
         if cik is not None and npi_data.find_one({'cik': str(cik)}) is None:
             npi_data.insert_one({'cik': cik, 'npi': npi})
 
+    update_collection = get_collection_from_db('db', 'update_collection')
+    update_collection.insert_one({'name': 'new_npis', 'count_new_npis': len(cik_npi_list)})
+
 
 def update_data():
+    drop_collection_from_db('db', 'update_collection')
     companies_col = get_collection_from_db('db', 'companies')
     new_data_json = get_all_data_parser1()
     if list(companies_col.find()) == []:
@@ -104,13 +113,15 @@ def update_data():
         # print(len(last_data), len(new_data), len(new_companies_list))
         write_all_data_parser3(new_companies_list)
     update_collection = get_collection_from_db('db', 'update_collection')
-    drop_collection_from_db('db', 'update_collection')
     now = datetime.datetime.now()
     dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-    update_collection.insert_one({'last_update': dt_string})
+    update_collection.insert_one({'name': 'last_update', 'update_time': dt_string})
 
 
 # write_all_data_parser2(get_all_data_from_collection('companies'))
 if __name__ == '__main__':
-    update_data()
+    while True:
+        update_data()
+        print('nice')
+        time.sleep(43200)
     # print(get_collection_from_db('db', 'update_collection').find_one().get('last_update'))
