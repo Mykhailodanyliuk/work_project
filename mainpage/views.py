@@ -25,7 +25,7 @@ def update_data(request):
 
 
 def download_data(request):
-    parsers.delete_and_download_data()
+    # parsers.delete_and_download_data()
     return render(request, 'mainpage/data_download.html')
 
 
@@ -36,15 +36,16 @@ def data_management(request):
 def get_company_data(request, cik):
     col = parsers.get_collection_from_db('db', 'companies_data')
     company_data = col.find_one({'cik': cik})
-    c_data = {}
     if not company_data:
         company_data = col.find_one({'cik': cik.zfill(10)})
     if company_data:
-        return render(request, 'mainpage/company_data.html', context={'dataset': company_data})
+        filings_recent = company_data.get('filings').get('recent').items()
+        return render(request, 'mainpage/company_data.html', context={'dataset': company_data, 'filings_recent':filings_recent})
 
 
 def get_list_companies_page(request):
     companies_data = parsers.get_all_data_from_collection('companies')
+    companies_collection = parsers.get_collection_from_db('db','companies')
     page = request.GET.get('page', 1)
     paginator = Paginator(companies_data, 500)
     try:
@@ -57,14 +58,17 @@ def get_list_companies_page(request):
         'update_time')
     count_new_companies = parsers.get_collection_from_db('db', 'update_collection').find_one({'name': 'new_companies'}).get(
         'count_new_companies')
-    return render(request, 'mainpage/companies_data.html', {'companies': companies, 'updated_time': updated_time, 'count_new_companies': count_new_companies})
+    count_records = companies_collection.count_documents({})
+    return render(request, 'mainpage/companies_data.html', {'companies': companies, 'updated_time': updated_time, 'count_new_companies': count_new_companies,'count_records':count_records})
 
 
 def get_list_npi_data(request):
+    npi_data_collection = parsers.get_collection_from_db('db', 'npi_data')
     npi_data = parsers.get_all_data_from_collection('npi_data')
     updated_time = parsers.get_collection_from_db('db', 'update_collection').find_one({'name': 'last_update'}).get(
         'update_time')
     count_new_npis = parsers.get_collection_from_db('db', 'update_collection').find_one(
         {'name': 'new_npis'}).get(
         'count_new_npis')
-    return render(request, 'mainpage/npi_data.html', {'npi_data': npi_data, 'updated_time': updated_time, 'count_new_npis': count_new_npis})
+    count_records = npi_data_collection.count_documents({})
+    return render(request, 'mainpage/npi_data.html', {'npi_data': npi_data, 'updated_time': updated_time, 'count_new_npis': count_new_npis, 'count_records': count_records})

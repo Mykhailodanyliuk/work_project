@@ -43,9 +43,7 @@ def write_all_data_parser2(companies_data):
     urls = [f'https://data.sec.gov/submissions/CIK{cik}.json' for cik in ciks]
     results = asyncio.run(parsing_tools.get_all_data_urls(urls, 2))
     for index, result in enumerate(results):
-        print(type(result))
-        if companies_collection.find_one({'str_cik': int(result.get('sic'))}) is None:
-            companies_data_collection.insert_one(result)
+        companies_data_collection.insert_one(result)
     update_collection = get_collection_from_db('db', 'update_collection')
     update_collection.insert_one({'name': 'new_companies', 'count_new_companies': len(results)})
 
@@ -118,10 +116,8 @@ def update_data():
     update_collection.insert_one({'name': 'last_update', 'update_time': dt_string})
 
 
-# write_all_data_parser2(get_all_data_from_collection('companies'))
 if __name__ == '__main__':
     while True:
         update_data()
         print('nice')
         time.sleep(43200)
-    # print(get_collection_from_db('db', 'update_collection').find_one().get('last_update'))
