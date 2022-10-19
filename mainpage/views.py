@@ -87,9 +87,10 @@ def get_list_npi_data(request):
 
 
 def nppes_data_page(request):
-    nppes_data = parsers.get_all_data_from_collection('nppes_data')
+    npees_data_collection = parsers.get_collection_from_db('db', 'nppes_data')
+    npis = npees_data_collection.distinct(key='NPI')
     page = request.GET.get('page', 1)
-    paginator = Paginator(nppes_data, 500)
+    paginator = Paginator(npis, 500)
     try:
         nppes = paginator.page(page)
     except PageNotAnInteger:
@@ -127,7 +128,7 @@ def display_organization_trials(request, org_id):
     col = parsers.get_collection_from_db('db', 'clinical_trials')
 
     my_list = list(col.find(
-        {'FullStudy.Study.ProtocolSection.IdentificationModule.Organization.OrgFullName': org_id.replace('_',' ')}))
+        {'FullStudy.Study.ProtocolSection.IdentificationModule.Organization.OrgFullName': org_id.replace('_', ' ')}))
     print(len(my_list))
     # org_clinical_trials_list = list(org_clinical_trials)
     # print(org_clinical_trials_list)
