@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+  <title>Medical Trials</title>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">Main page</a>
+    </div>
+  </nav>
+  <a>Updated: {{updated_time}}</a><br>
+  <a>New companies: {{count_new_companies}}</a><br>
+  <a>The parser is updated: every 12 hours</a><br>
+  <a>Count records: {{ count_records }}</a>
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Organization</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for id,organization in dataset %}
+        <tr>
+            <td><a href="medical_trials/{{ id }}">{{ organization }}</a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% if part_trials.has_other_pages %}
+    <ul class="pagination">
+      {% if part_trials.has_previous %}
+        <li><a class="page-link" href="?page={{ part_trials.previous_page_number }}">&laquo;</a></li>
+      {% else %}
+        <li><span>&laquo;</span></li>
+      {% endif %}
+      {% for i in part_trials.paginator.page_range %}
+        {% if part_trials.number == i %}
+          <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only"></span></span></li>
+        {% else %}
+          <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+      {% endfor %}
+      {% if part_trials.has_next %}
+        <li><a class="page-link" href="?page={{ part_trials.next_page_number }}">&raquo;</a></li>
+      {% else %}
+        <li class="page-link"><span>&raquo;</span></li>
+      {% endif %}
+    </ul>
+  {% endif %}
+</body>
+</html>

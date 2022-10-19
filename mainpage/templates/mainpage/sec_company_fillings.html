@@ -21,16 +21,12 @@
     <thead>
       <tr>
         <th>Conmapy name</th>
-        <th>CIK number</th>
-        <th>Ticker</th>
       </tr>
     </thead>
     <tbody>
       {% for company in companies %}
         <tr>
           <td><a href = "/companies_data/{{company.cik_str}}"> {{ company.title }}</a></td>
-          <td>{{ company.cik_str }}</td>
-          <td>{{ company.ticker }}</td>
         </tr>
       {% endfor %}
     </tbody>

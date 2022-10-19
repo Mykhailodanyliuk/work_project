@@ -65,10 +65,47 @@
                     </tr>
                     <tr>
                         <td>Files:</td>
-                        <td>{{ value.files }}</td>
+                        <td>
+                        {% for data in value.files %}
+                            <table>
+                                <tr>
+                                <td>{{ data }}</td>
+                                </tr>
+                            </table>
+                        {% endfor %}
+                        </td>
+{#                        <td>{{ value.files }}</td>#}
                     </tr>
                 </table>
                 </td>
+            </tr>
+        {% elif key == 'formerNames' %}
+            <tr>
+            <td>Former Names</td>
+            <td>
+                <table class="table table-bordered">
+                    {% for data in value %}
+                    <tr>
+                    <td> name</td>
+                    <td>{{ data.name }}</td>
+                    <td>from</td>
+                    <td>{{ data.from }}</td>
+                    <td>to</td>
+                    <td>{{ data.to }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </td>
+            </tr>
+        {% elif key == 'tickers' %}
+            <tr>
+                <td>{{ key }}</td>
+                <td>{{ value|join:", " }}</td>
+            </tr>
+        {% elif key == 'exchanges' %}
+            <tr>
+                <td>{{ key }}</td>
+                <td>{{ value|join:", " }}</td>
             </tr>
         {% else %}
         <tr>
