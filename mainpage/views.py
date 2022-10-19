@@ -5,6 +5,8 @@ from . import parsers
 from json2html import *
 from django.http import JsonResponse
 
+npees_data_collection = parsers.get_collection_from_db('db', 'nppes_data')
+
 def error_404(request, exception):
     return render(request, 'mainpage/404.html')
 
@@ -87,7 +89,6 @@ def get_list_npi_data(request):
 
 
 def nppes_data_page(request):
-    npees_data_collection = parsers.get_collection_from_db('db', 'nppes_data')
     npis = npees_data_collection.distinct(key='NPI')
     page = request.GET.get('page', 1)
     paginator = Paginator(npis, 500)
