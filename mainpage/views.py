@@ -7,6 +7,10 @@ from django.http import JsonResponse
 
 npees_data_collection = parsers.get_collection_from_db('db', 'nppes_data')
 trials_colllection = parsers.get_collection_from_db('db', 'clinical_trials')
+medical_trials_collection = parsers.get_collection_from_db('db', 'clinical_trials')
+organizations = medical_trials_collection.distinct(
+    key='FullStudy.Study.ProtocolSection.IdentificationModule.Organization.OrgFullName')
+
 
 def error_404(request, exception):
     return render(request, 'mainpage/404.html')
@@ -110,9 +114,6 @@ def nppes_data(request, npi):
 
 
 def medical_trials(request):
-    medical_trials_collection = parsers.get_collection_from_db('db', 'clinical_trials')
-    organizations = medical_trials_collection.distinct(
-        key='FullStudy.Study.ProtocolSection.IdentificationModule.Organization.OrgFullName')
     organizations_and_id = [[organization.replace(' ', '_'), organization]
                             for organization in organizations]
     page = request.GET.get('page', 1)
