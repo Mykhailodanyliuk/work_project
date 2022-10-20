@@ -6,10 +6,6 @@ from json2html import *
 from django.http import JsonResponse
 
 npees_data_collection = parsers.get_collection_from_db('db', 'nppes_data')
-trials_colllection = parsers.get_collection_from_db('db', 'clinical_trials')
-medical_trials_collection = parsers.get_collection_from_db('db', 'clinical_trials')
-organizations = medical_trials_collection.distinct(
-    key='FullStudy.Study.ProtocolSection.IdentificationModule.Organization.OrgFullName')
 
 
 def error_404(request, exception):
@@ -114,8 +110,13 @@ def nppes_data(request, npi):
 
 
 def medical_trials(request):
+    medical_trial_organizations_collection = parsers.get_collection_from_db('db', 'clinical_trials_organizations')
+    # organizations = medical_trials_collection.distinct(
+    #     key='FullStudy.Study.ProtocolSection.IdentificationModule.Organization.OrgFullName')
+    organizations = [record['organization'] for record in medical_trial_organizations_collection.find()]
     organizations_and_id = [[organization.replace(' ', '_'), organization]
-                            for organization in organizations]
+                            for organization in list(organizations)]
+
     page = request.GET.get('page', 1)
     paginator = Paginator(organizations_and_id, 500)
     try:
@@ -128,8 +129,7 @@ def medical_trials(request):
 
 
 def display_organization_trials(request, org_id):
-
-
+    trials_colllection = parsers.get_collection_from_db('db', 'clinical_trials')
     my_list = list(trials_colllection.find(
         {'FullStudy.Study.ProtocolSection.IdentificationModule.Organization.OrgFullName': org_id.replace('_', ' ')}))
     print(len(my_list))
