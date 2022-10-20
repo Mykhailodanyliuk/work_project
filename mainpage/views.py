@@ -6,6 +6,7 @@ from json2html import *
 from django.http import JsonResponse
 
 npees_data_collection = parsers.get_collection_from_db('db', 'nppes_data')
+trials_colllection = parsers.get_collection_from_db('db', 'clinical_trials')
 
 def error_404(request, exception):
     return render(request, 'mainpage/404.html')
@@ -126,9 +127,9 @@ def medical_trials(request):
 
 
 def display_organization_trials(request, org_id):
-    col = parsers.get_collection_from_db('db', 'clinical_trials')
 
-    my_list = list(col.find(
+
+    my_list = list(trials_colllection.find(
         {'FullStudy.Study.ProtocolSection.IdentificationModule.Organization.OrgFullName': org_id.replace('_', ' ')}))
     print(len(my_list))
     # org_clinical_trials_list = list(org_clinical_trials)
