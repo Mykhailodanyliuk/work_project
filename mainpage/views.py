@@ -130,11 +130,9 @@ def medical_trials(request):
 
 def display_organization_trials(request, org_id):
     trials_colllection = parsers.get_collection_from_db('db', 'clinical_trials')
-    my_list = list(trials_colllection.find(
-        {'FullStudy.Study.ProtocolSection.IdentificationModule.Organization.OrgFullName': org_id.replace('_', ' ')}))
-    print(len(my_list))
-    # org_clinical_trials_list = list(org_clinical_trials)
-    # print(org_clinical_trials_list)
+    pipeline = [{"$match": {'FullStudy.Study.ProtocolSection.IdentificationModule.Organization.OrgFullName': org_id.replace('_', ' ')}}]
+    my_list = list(trials_colllection.aggregate(pipeline))
+    print(my_list)
     return render(request, 'mainpage/organization_clinical_trials.html', context={'dataset': my_list})
 
 def display_clinical_trial(request, trial_id):
