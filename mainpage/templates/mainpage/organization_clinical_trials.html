@@ -13,9 +13,9 @@
 </nav>
 <table class="table table-bordered">
         <tbody>
-        {% for trials in dataset %}
+        {% for trial in dataset %}
             <tr>
-                <td><a href="{% url 'trials' trials.FullStudy.Study.ProtocolSection.IdentificationModule.NCTId %}">{{ trials.FullStudy.Study.ProtocolSection.IdentificationModule.NCTId }}</a></td>
+                <td><a href="{% url 'trials' trial.nct_id  %}">{{ trial.nct_id }}</a></td>
             </tr>
         {% endfor %}
         </tbody>

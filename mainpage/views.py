@@ -1,3 +1,6 @@
+import json
+
+import pymongo
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.contrib import messages
@@ -130,14 +133,13 @@ def medical_trials(request):
 
 def display_organization_trials(request, org_id):
     trials_colllection = parsers.get_collection_from_db('db', 'clinical_trials')
-    pipeline = [{"$match": {'FullStudy.Study.ProtocolSection.IdentificationModule.Organization.OrgFullName': org_id.replace('_', ' ')}}]
-    my_list = list(trials_colllection.aggregate(pipeline))
+    my_list = list(trials_colllection.find({'organization': org_id.replace('_', ' ')}))
     print(my_list)
     return render(request, 'mainpage/organization_clinical_trials.html', context={'dataset': my_list})
 
 def display_clinical_trial(request, trial_id):
     print(trial_id)
     col = parsers.get_collection_from_db('db', 'clinical_trials')
-    data = col.find_one({'FullStudy.Study.ProtocolSection.IdentificationModule.NCTId': trial_id})
+    data = col.find_one({'nct_id': trial_id})
     print(data)
     return render(request, 'mainpage/clinical_trial.html', context={'dataset': data})
