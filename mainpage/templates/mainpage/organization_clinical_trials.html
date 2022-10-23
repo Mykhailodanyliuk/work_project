@@ -11,11 +11,12 @@
         <a class="navbar-brand" href="/">Main page</a>
     </div>
 </nav>
+<h3>{{ dataset.organization }}</h3>
 <table class="table table-bordered">
         <tbody>
-        {% for trial in dataset %}
+        {% for trial in dataset.NCTId %}
             <tr>
-                <td><a href="{% url 'trials' trial.nct_id  %}">{{ trial.nct_id }}</a></td>
+                <td><a href="{% url 'trials' trial  %}">{{ trial }}</a></td>
             </tr>
         {% endfor %}
         </tbody>

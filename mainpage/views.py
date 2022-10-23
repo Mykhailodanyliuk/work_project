@@ -132,10 +132,10 @@ def medical_trials(request):
 
 
 def display_organization_trials(request, org_id):
-    trials_colllection = parsers.get_collection_from_db('db', 'clinical_trials')
-    my_list = list(trials_colllection.find({'organization': org_id.replace('_', ' ')}))
+    clinical_trial_organizations_collection = parsers.get_collection_from_db('db', 'clinical_trials_organizations')
+    my_list = list(clinical_trial_organizations_collection.find({'organization': org_id.replace('_', ' ')}))
     print(my_list)
-    return render(request, 'mainpage/organization_clinical_trials.html', context={'dataset': my_list})
+    return render(request, 'mainpage/organization_clinical_trials.html', context={'dataset': my_list[0]})
 
 def display_clinical_trial(request, trial_id):
     print(trial_id)
