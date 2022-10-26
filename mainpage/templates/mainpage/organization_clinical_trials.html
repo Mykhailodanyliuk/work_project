@@ -21,5 +21,26 @@
         {% endfor %}
         </tbody>
 </table>
+{% if dataset.has_other_pages %}
+    <ul class="pagination">
+      {% if dataset.has_previous %}
+        <li><a class="page-link" href="?page={{ dataset.previous_page_number }}">&laquo;</a></li>
+      {% else %}
+        <li><span>&laquo;</span></li>
+      {% endif %}
+      {% for i in dataset.paginator.page_range %}
+        {% if dataset.number == i %}
+          <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only"></span></span></li>
+        {% else %}
+          <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+      {% endfor %}
+      {% if dataset.has_next %}
+        <li><a class="page-link" href="?page={{ dataset.next_page_number }}">&raquo;</a></li>
+      {% else %}
+        <li class="page-link"><span>&raquo;</span></li>
+      {% endif %}
+    </ul>
+  {% endif %}
 </body>
 </html>

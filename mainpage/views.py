@@ -93,6 +93,7 @@ def get_list_npi_data(request):
 
 
 def nppes_data_page(request):
+    nppes_data = parsers.get_collection_from_db('db', 'nppes_data')
     npis = npees_data_collection.distinct(key='NPI')
     page = request.GET.get('page', 1)
     paginator = Paginator(npis, 500)
@@ -102,7 +103,8 @@ def nppes_data_page(request):
         nppes = paginator.page(1)
     except EmptyPage:
         nppes = paginator.page(paginator.num_pages)
-    return render(request, 'mainpage/nppes_list_data.html', {'nppes_data': nppes})
+    count_records = nppes_data.count_documents({})
+    return render(request, 'mainpage/nppes_list_data.html', {'nppes_data': nppes, 'count_records': count_records})
 
 
 def nppes_data(request, npi):
@@ -136,6 +138,7 @@ def display_organization_trials(request, org_id):
     my_list = list(clinical_trial_organizations_collection.find({'organization': org_id.replace('_', ' ')}))
     print(my_list)
     return render(request, 'mainpage/organization_clinical_trials.html', context={'dataset': my_list[0]})
+
 
 def display_clinical_trial(request, trial_id):
     print(trial_id)
