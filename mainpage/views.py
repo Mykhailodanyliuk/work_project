@@ -9,7 +9,7 @@ from json2html import *
 from django.http import JsonResponse
 
 npees_data_collection = parsers.get_collection_from_db('db', 'nppes_data')
-
+# companies_data_collection_data = parsers.get_all_data_from_collection('companies_data')
 
 def error_404(request, exception):
     return render(request, 'mainpage/404.html')
@@ -116,11 +116,10 @@ def nppes_data(request, npi):
 
 def medical_trials(request):
     medical_trial_organizations_collection = parsers.get_collection_from_db('db', 'clinical_trials_organizations')
-    # organizations = medical_trials_collection.distinct(
-    #     key='FullStudy.Study.ProtocolSection.IdentificationModule.Organization.OrgFullName')
     organizations = [record['organization'] for record in medical_trial_organizations_collection.find()]
     organizations_and_id = [[organization.replace(' ', '_'), organization]
                             for organization in list(organizations)]
+    count_organizations = len(organizations_and_id)
 
     page = request.GET.get('page', 1)
     paginator = Paginator(organizations_and_id, 500)
@@ -130,7 +129,7 @@ def medical_trials(request):
         part_organizations = paginator.page(1)
     except EmptyPage:
         part_organizations = paginator.page(paginator.num_pages)
-    return render(request, 'mainpage/medical_trials.html', context={'dataset': part_organizations})
+    return render(request, 'mainpage/medical_trials.html', context={'dataset': part_organizations, 'count': count_organizations})
 
 
 def display_organization_trials(request, org_id):
