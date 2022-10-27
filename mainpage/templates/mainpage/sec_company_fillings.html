@@ -28,7 +28,9 @@
     <tbody>
       {% for company in companies %}
         <tr>
-          <td><a href = "/companies_data/{{company.cik_str}}"> {{ company.title }}</a></td>
+            <td><a href = "/companies_data/{{company.cik}}"> {{ company.name }}</a></td>
+            <td>{{company.cik}}</td>
+            <td>{{company.ein}}</td>
         </tr>
       {% endfor %}
     </tbody>

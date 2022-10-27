@@ -8,8 +8,14 @@ from . import parsers
 from json2html import *
 from django.http import JsonResponse
 
+mycollection = parsers.get_collection_from_db('db', 'nppes_data')
 npees_data_collection = parsers.get_collection_from_db('db', 'nppes_data')
-# companies_data_collection_data = parsers.get_all_data_from_collection('companies_data')
+# clinical_trial_individual_collection_data = parsers.get_all_data_from_collection('nppes_data_individual')
+# clinical_trial_entities_collection_data = parsers.get_all_data_from_collection('nppes_data_entities')
+clinical_trial_individual_collection_data = list(mycollection.find({'Entity Type Code': '1'},
+                                  {'NPI': 1, '_id': 0, 'Provider First Name': 1, 'Provider Last Name (Legal Name)': 1}))
+clinical_trial_entities_collection_data = list(mycollection.find({'Entity Type Code': '2'}, {'NPI': 1, '_id': 0, 'Provider Organization Name (Legal Business Name)':1}))
+
 
 def error_404(request, exception):
     return render(request, 'mainpage/404.html')
@@ -24,10 +30,12 @@ def index(request):
 
 
 def sec_company_fillings(request):
-    companies_data = parsers.get_all_data_from_collection('companies')
-    companies_collection = parsers.get_collection_from_db('db', 'companies')
+    companies_cik_ein_col = parsers.get_collection_from_db('db', 'companies_cik_ein')
+    companies_cik_ein_data = parsers.get_all_data_from_collection('companies_cik_ein')
+    # companies_data = parsers.get_all_data_from_collection('companies')
+    # companies_collection = parsers.get_collection_from_db('db', 'companies')
     page = request.GET.get('page', 1)
-    paginator = Paginator(companies_data, 500)
+    paginator = Paginator(companies_cik_ein_data, 500)
     try:
         companies = paginator.page(page)
     except PageNotAnInteger:
@@ -39,7 +47,7 @@ def sec_company_fillings(request):
     count_new_companies = parsers.get_collection_from_db('db', 'update_collection').find_one(
         {'name': 'new_companies'}).get(
         'count_new_companies')
-    count_records = companies_collection.count_documents({})
+    count_records = companies_cik_ein_col.count_documents({})
     return render(request, 'mainpage/sec_company_fillings.html',
                   {'companies': companies, 'updated_time': updated_time, 'count_new_companies': count_new_companies,
                    'count_records': count_records})
@@ -93,23 +101,12 @@ def get_list_npi_data(request):
 
 
 def nppes_data_page(request):
-    nppes_data = parsers.get_collection_from_db('db', 'nppes_data')
-    npis = npees_data_collection.distinct(key='NPI')
-    page = request.GET.get('page', 1)
-    paginator = Paginator(npis, 500)
-    try:
-        nppes = paginator.page(page)
-    except PageNotAnInteger:
-        nppes = paginator.page(1)
-    except EmptyPage:
-        nppes = paginator.page(paginator.num_pages)
-    count_records = nppes_data.count_documents({})
-    return render(request, 'mainpage/nppes_list_data.html', {'nppes_data': nppes, 'count_records': count_records})
+    return render(request, 'mainpage/nppes_list_data.html')
 
 
-def nppes_data(request, npi):
+def nppes_data(request, npi_id):
     col = parsers.get_collection_from_db('db', 'nppes_data')
-    nppes_npi_data = col.find_one({'NPI': str(npi)})
+    nppes_npi_data = col.find_one({'NPI': str(npi_id)})
     if nppes_npi_data:
         return render(request, 'mainpage/nppes_data.html', context={'dataset': nppes_npi_data})
 
@@ -129,7 +126,8 @@ def medical_trials(request):
         part_organizations = paginator.page(1)
     except EmptyPage:
         part_organizations = paginator.page(paginator.num_pages)
-    return render(request, 'mainpage/medical_trials.html', context={'dataset': part_organizations, 'count': count_organizations})
+    return render(request, 'mainpage/medical_trials.html',
+                  context={'dataset': part_organizations, 'count': count_organizations})
 
 
 def display_organization_trials(request, org_id):
@@ -145,3 +143,29 @@ def display_clinical_trial(request, trial_id):
     data = col.find_one({'nct_id': trial_id})
     print(data)
     return render(request, 'mainpage/clinical_trial.html', context={'dataset': data})
+
+
+def display_clinical_trial_individual(request):
+    page = request.GET.get('page', 1)
+    paginator = Paginator(clinical_trial_individual_collection_data, 500)
+    try:
+        part_npi = paginator.page(page)
+    except PageNotAnInteger:
+        part_npi = paginator.page(1)
+    except EmptyPage:
+        part_npi = paginator.page(paginator.num_pages)
+    print(part_npi)
+    return render(request, 'mainpage/nppes_individual.html', context={'dataset': part_npi})
+
+
+def display_clinical_trial_entities(request):
+    page = request.GET.get('page', 1)
+    paginator = Paginator(clinical_trial_entities_collection_data, 500)
+    try:
+        part_npi = paginator.page(page)
+    except PageNotAnInteger:
+        part_npi = paginator.page(1)
+    except EmptyPage:
+        part_npi = paginator.page(paginator.num_pages)
+    print(part_npi)
+    return render(request, 'mainpage/nppes_entities.html', context={'dataset': part_npi})

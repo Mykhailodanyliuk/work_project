@@ -14,10 +14,12 @@
 <table class="table table-bordered">
         <tbody>
         {% for key, value in dataset.items %}
+            {% if value != '' %}
             <tr>
                 <td>{{ key }}</td>
                 <td>{{ value }}</td>
             </tr>
+            {% endif %}
         {% endfor %}
         </tbody>
 </table>

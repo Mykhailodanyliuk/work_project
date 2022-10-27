@@ -11,68 +11,8 @@
       <a class="navbar-brand" href="/">Main page</a>
     </div>
   </nav>
-  <a>Updated: {{updated_time}}</a><br>
-  <a>New NPI: {{count_new_companies}}</a><br>
-  <a>The parser is updated: every 12 hours</a><br>
-  <a>Count records: {{ count_records }}</a>
+    <a class="btn btn-primary" href="nppes_data/individual/" role="button">Indiviual</a>
+<a class="btn btn-primary" href="nppes_data/entities/" role="button">Entity</a>
 
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>NPI</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for company in nppes_data %}
-        <tr>
-            <td><a href="/nppes_data/{{ company }}">{{ company }}</a></td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-
-  <nav aria-label="Page navigation example">
-    <ul class="pagination justify-content-center">
-    {% if nppes_data.has_previous %}
-        <li class="page-item">
-        <a class="page-link" href="?page={{ nppes_data.previous_page_number }}">Previous</a>
-      </li>
-    {% else %}
-        <li class="page-item disabled">
-        <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Previous</a>
-      </li>
-    {% endif %}
-
-    {% if nppes_data.number|add:'-4' > 1 %}
-        <li class="page-item"><a class="page-link" href="?page={{ nppes_data.number|add:'-5' }}">&hellip;</a></li>
-    {% endif %}
-
-    {% for i in nppes_data.paginator.page_range %}
-        {% if nppes_data.number == i %}
-            <li class="page-item active" aria-current="page">
-          <span class="page-link">
-            {{ i }}
-          </span>
-        </li>
-        {% elif i > nppes_data.number|add:'-5' and i < nppes_data.number|add:'5' %}
-             <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
-        {% endif %}
-    {% endfor %}
-
-    {% if nppes_data.paginator.num_pages > nppes_data.number|add:'4' %}
-       <li class="page-item"><a class="page-link" href="?page={{ nppes_data.number|add:'5' }}">&hellip;</a></li>
-    {% endif %}
-
-    {% if nppes_data.has_next %}
-        <li class="page-item">
-        <a class="page-link" href="?page={{ nppes_data.next_page_number }}">Next</a>
-      </li>
-    {% else %}
-        <li class="page-item disabled">
-        <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Next</a>
-      </li>
-    {% endif %}
-  </ul>
-</nav>
 </body>
 </html>
