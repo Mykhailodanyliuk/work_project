@@ -10,12 +10,15 @@ from django.http import JsonResponse
 
 mycollection = parsers.get_collection_from_db('db', 'nppes_data')
 npees_data_collection = parsers.get_collection_from_db('db', 'nppes_data')
+companies_data_collection = parsers.get_collection_from_db('db', 'companies_data')
+companies_cik_ein_data = list(companies_data_collection.find({}, {'_id':0, 'name':1, 'cik':1, 'ein':1}))
 # clinical_trial_individual_collection_data = parsers.get_all_data_from_collection('nppes_data_individual')
 # clinical_trial_entities_collection_data = parsers.get_all_data_from_collection('nppes_data_entities')
-clinical_trial_individual_collection_data = list(mycollection.find({'Entity Type Code': '1'},
-                                  {'NPI': 1, '_id': 0, 'Provider First Name': 1, 'Provider Last Name (Legal Name)': 1}))
-clinical_trial_entities_collection_data = list(mycollection.find({'Entity Type Code': '2'}, {'NPI': 1, '_id': 0, 'Provider Organization Name (Legal Business Name)':1}))
-
+# clinical_trial_individual_collection_data = mycollection.find({'Entity Type Code': '1'},
+#                                   {'NPI': 1, '_id': 0, 'Provider First Name': 1, 'Provider Last Name (Legal Name)': 1})
+# clinical_trial_entities_collection_data = mycollection.find({'Entity Type Code': '2'}, {'NPI': 1, '_id': 0, 'Provider Organization Name (Legal Business Name)':1})
+clinical_trial_individual_collection_data = []
+clinical_trial_entities_collection_data = []
 
 def error_404(request, exception):
     return render(request, 'mainpage/404.html')
@@ -30,10 +33,6 @@ def index(request):
 
 
 def sec_company_fillings(request):
-    companies_cik_ein_col = parsers.get_collection_from_db('db', 'companies_cik_ein')
-    companies_cik_ein_data = parsers.get_all_data_from_collection('companies_cik_ein')
-    # companies_data = parsers.get_all_data_from_collection('companies')
-    # companies_collection = parsers.get_collection_from_db('db', 'companies')
     page = request.GET.get('page', 1)
     paginator = Paginator(companies_cik_ein_data, 500)
     try:
@@ -47,7 +46,7 @@ def sec_company_fillings(request):
     count_new_companies = parsers.get_collection_from_db('db', 'update_collection').find_one(
         {'name': 'new_companies'}).get(
         'count_new_companies')
-    count_records = companies_cik_ein_col.count_documents({})
+    count_records = companies_data_collection.count_documents({})
     return render(request, 'mainpage/sec_company_fillings.html',
                   {'companies': companies, 'updated_time': updated_time, 'count_new_companies': count_new_companies,
                    'count_records': count_records})
@@ -109,7 +108,6 @@ def nppes_data(request, npi_id):
     nppes_npi_data = col.find_one({'NPI': str(npi_id)})
     if nppes_npi_data:
         return render(request, 'mainpage/nppes_data.html', context={'dataset': nppes_npi_data})
-
 
 def medical_trials(request):
     medical_trial_organizations_collection = parsers.get_collection_from_db('db', 'clinical_trials_organizations')
