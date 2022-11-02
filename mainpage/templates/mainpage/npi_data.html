@@ -2,35 +2,36 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <title>NPI data</title>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/">Main page</a>
-        </div>
-    </nav>
-    <a>Updated: {{updated_time}}</a><br>
-    <a>New npi: {{count_new_npis}}</a><br>
-    <a>The parser is updated: every 12 hours</a><br>
-    <a>Count records: {{ count_records }}</a>
+<nav class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">Main page</a>
+    </div>
+</nav>
+<a>Updated: {{ updated_time }}</a><br>
+<a>New npi: {{ count_new_npis }}</a><br>
+<a>The parser is updated: every 12 hours</a><br>
+<a>Count records: {{ count_records }}</a>
 
-  <table class="table table-bordered">
+<table class="table table-bordered">
     <thead>
-      <tr>
+    <tr>
         <th>CIK</th>
         <th>NPI numbers</th>
-      </tr>
+    </tr>
     </thead>
     <tbody>
-      {% for data in npi_data %}
+    {% for data in npi_data %}
         <tr>
             <td>{{ data.cik }}</td>
-            <td>{{ data.npi|join:", "  }}</td>
+            <td>{{ data.npi|join:", " }}</td>
         </tr>
-      {% endfor %}
+    {% endfor %}
     </tbody>
-  </table>
+</table>
 </body>
 </html>

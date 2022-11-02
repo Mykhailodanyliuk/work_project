@@ -11,14 +11,14 @@ from django.http import JsonResponse
 mycollection = parsers.get_collection_from_db('db', 'nppes_data')
 npees_data_collection = parsers.get_collection_from_db('db', 'nppes_data')
 companies_data_collection = parsers.get_collection_from_db('db', 'companies_data')
-companies_cik_ein_data = list(companies_data_collection.find({}, {'_id':0, 'name':1, 'cik':1, 'ein':1}))
-# clinical_trial_individual_collection_data = parsers.get_all_data_from_collection('nppes_data_individual')
-# clinical_trial_entities_collection_data = parsers.get_all_data_from_collection('nppes_data_entities')
-# clinical_trial_individual_collection_data = mycollection.find({'Entity Type Code': '1'},
-#                                   {'NPI': 1, '_id': 0, 'Provider First Name': 1, 'Provider Last Name (Legal Name)': 1})
-# clinical_trial_entities_collection_data = mycollection.find({'Entity Type Code': '2'}, {'NPI': 1, '_id': 0, 'Provider Organization Name (Legal Business Name)':1})
+companies_cik_ein_data = list(companies_data_collection.find({}, {'_id': 0, 'name': 1, 'cik': 1, 'ein': 1}))
+nppes_data_individual_collection = parsers.get_collection_from_db('db', 'nppes_data_individual')
+nppes_data_entities_collection = parsers.get_collection_from_db('db', 'nppes_data_entities')
+count_nppes_data_individual = nppes_data_individual_collection.count_documents({})
+count_nppes_data_entities = nppes_data_entities_collection.count_documents({})
 clinical_trial_individual_collection_data = []
 clinical_trial_entities_collection_data = []
+
 
 def error_404(request, exception):
     return render(request, 'mainpage/404.html')
@@ -109,6 +109,7 @@ def nppes_data(request, npi_id):
     if nppes_npi_data:
         return render(request, 'mainpage/nppes_data.html', context={'dataset': nppes_npi_data})
 
+
 def medical_trials(request):
     medical_trial_organizations_collection = parsers.get_collection_from_db('db', 'clinical_trials_organizations')
     organizations = [record['organization'] for record in medical_trial_organizations_collection.find()]
@@ -145,25 +146,27 @@ def display_clinical_trial(request, trial_id):
 
 def display_clinical_trial_individual(request):
     page = request.GET.get('page', 1)
-    paginator = Paginator(clinical_trial_individual_collection_data, 500)
-    try:
-        part_npi = paginator.page(page)
-    except PageNotAnInteger:
-        part_npi = paginator.page(1)
-    except EmptyPage:
-        part_npi = paginator.page(paginator.num_pages)
-    print(part_npi)
-    return render(request, 'mainpage/nppes_individual.html', context={'dataset': part_npi})
+    num_pages = count_nppes_data_individual // 500 + 1
+    page_range = range(1, num_pages + 1)
+    has_previous = True if int(page) > 0 else False
+    number = int(page)
+    previous_page_number = number - 1
+    has_next = True if number < num_pages else False
+    dataset1 = {'num_pages': num_pages, 'page_range': page_range, 'has_previous': has_previous, 'number': number,
+                'has_next': has_next, 'previous_page_number': previous_page_number}
+    part_npi = nppes_data_individual_collection.find().skip(500 * (number - 1)).limit(500)
+    return render(request, 'mainpage/nppes_individual.html', context={'dataset': part_npi, 'dataset1': dataset1})
 
 
 def display_clinical_trial_entities(request):
     page = request.GET.get('page', 1)
-    paginator = Paginator(clinical_trial_entities_collection_data, 500)
-    try:
-        part_npi = paginator.page(page)
-    except PageNotAnInteger:
-        part_npi = paginator.page(1)
-    except EmptyPage:
-        part_npi = paginator.page(paginator.num_pages)
-    print(part_npi)
-    return render(request, 'mainpage/nppes_entities.html', context={'dataset': part_npi})
+    num_pages = count_nppes_data_entities // 500 + 1
+    page_range = range(1, num_pages + 1)
+    has_previous = True if int(page) > 0 else False
+    number = int(page)
+    previous_page_number = number - 1
+    has_next = True if number < num_pages else False
+    dataset1 = {'num_pages': num_pages, 'page_range': page_range, 'has_previous': has_previous, 'number': number,
+                'has_next': has_next, 'previous_page_number': previous_page_number}
+    part_npi = nppes_data_entities_collection.find().skip(500 * (number - 1)).limit(500)
+    return render(request, 'mainpage/nppes_entities.html', context={'dataset': part_npi, 'dataset1': dataset1})

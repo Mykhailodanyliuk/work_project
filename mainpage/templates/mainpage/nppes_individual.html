@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <title>NPPES DATA INDIVIDUAL</title>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg bg-light">
@@ -13,71 +14,71 @@
 </nav>
 {#{{ dataset }}#}
 <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>NPI</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for data in dataset %}
-            <tr>
-                {% for key, value in data.items%}
+    <thead>
+    <tr>
+        <th>NPI</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for data in dataset %}
+        <tr>
+            {% for key, value in data.items %}
                 {% if key == '_id' %}
                 {% elif key == 'NPI' %}
-                    <td><a href="{% url 'individual_npi' value  %}">{{ value }}</a></td>
+                    <td><a href="{% url 'individual_npi' value %}">{{ value }}</a></td>
                 {% else %}
-                    <td>{{ value}}</td>
+                    <td>{{ value }}</td>
                 {% endif %}
-                {% endfor %}
-            </tr>
+            {% endfor %}
+        </tr>
 
-        {% endfor %}
-        </tbody>
+    {% endfor %}
+    </tbody>
 </table>
 <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
-    {% if dataset.has_previous %}
-        <li class="page-item">
-        <a class="page-link" href="?page={{ dataset.previous_page_number }}">Previous</a>
-      </li>
-    {% else %}
-        <li class="page-item disabled">
-        <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Previous</a>
-      </li>
-    {% endif %}
+        {% if dataset1.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ dataset1.previous_page_number }}">Previous</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Previous</a>
+            </li>
+        {% endif %}
 
-    {% if dataset.number|add:'-4' > 1 %}
-        <li class="page-item"><a class="page-link" href="?page={{ companies.number|add:'-5' }}">&hellip;</a></li>
-    {% endif %}
+        {% if dataset1.number|add:'-4' > 1 %}
+            <li class="page-item"><a class="page-link" href="?page={{ dataset1.number|add:'-5' }}">&hellip;</a></li>
+        {% endif %}
 
-    {% for i in dataset.paginator.page_range %}
-        {% if dataset.number == i %}
-            <li class="page-item active" aria-current="page">
+        {% for i in dataset1.page_range %}
+            {% if dataset1.number == i %}
+                <li class="page-item active" aria-current="page">
           <span class="page-link">
             {{ i }}
           </span>
-        </li>
-        {% elif i > dataset.number|add:'-5' and i < dataset.number|add:'5' %}
-             <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                </li>
+            {% elif i > dataset1.number|add:'-5' and i < dataset1.number|add:'5' %}
+                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if dataset1.num_pages > dataset1.number|add:'4' %}
+            <li class="page-item"><a class="page-link" href="?page={{ dataset1.number|add:'5' }}">&hellip;</a></li>
         {% endif %}
-    {% endfor %}
 
-    {% if dataset.paginator.num_pages > dataset.number|add:'4' %}
-       <li class="page-item"><a class="page-link" href="?page={{ dataset.number|add:'5' }}">&hellip;</a></li>
-    {% endif %}
-
-    {% if dataset.has_next %}
-        <li class="page-item">
-        <a class="page-link" href="?page={{ dataset.next_page_number }}">Next</a>
-      </li>
-    {% else %}
-        <li class="page-item disabled">
-        <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Next</a>
-      </li>
-    {% endif %}
-  </ul>
+        {% if dataset1.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ dataset1.next_page_number }}">Next</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Next</a>
+            </li>
+        {% endif %}
+    </ul>
 </nav>
 </body>
 </html>

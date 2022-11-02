@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-    <title>Title</title>
+    <title>NPPES DATA ENTITIES</title>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg bg-light">
@@ -37,9 +37,9 @@
 </table>
 <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
-    {% if dataset.has_previous %}
+    {% if dataset1.has_previous %}
         <li class="page-item">
-        <a class="page-link" href="?page={{ dataset.previous_page_number }}">Previous</a>
+        <a class="page-link" href="?page={{ dataset1.previous_page_number }}">Previous</a>
       </li>
     {% else %}
         <li class="page-item disabled">
