@@ -16,7 +16,22 @@
 <a>Updated: {{ updated_time }}</a><br>
 <a>New companies: {{ count_new_companies }}</a><br>
 <a>The parser is updated: every 12 hours</a><br>
-<a>Count records: {{ count_records }}</a>
+<a>Count records: {{ count_records }}</a><br>
+
+{#<a href="{% url 'sec_company_fillings'%}?sort=name">Name </a>#}
+{##}
+{#<form action="{% url 'sec_company_fillings' %}" class="sort__form" method="GET">#}
+{#    <h1 class="sort__header"> SORT ITEMS </h1>#}
+{#    <select class="sort__select" name="select">#}
+{#        <option disabled selected> Sorting method</option>#}
+{#        <option  value="v1">Price: low to high</option>#}
+{#        <option selected value="v2">Price: high to low</option>#}
+{#    </select>#}
+{#    <button class="sort__submit">SORT</button>#}
+{#</form>#}
+
+<a href="?order_by=name">Order my name</a><br>
+<a href="?order_by=cik">Order by cik</a>
 
 <table class="table table-bordered">
     <thead>
@@ -36,15 +51,12 @@
     {% endfor %}
     </tbody>
 </table>
-{{ companies.number  }}
-{{ companies.paginator.page_range  }}
-{{ companies.paginator.num_pages  }}
 
 <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
-        {% if companies.has_previous %}
+        {% if dataset1.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ companies.previous_page_number }}">Previous</a>
+                <a class="page-link" href="?page={{ dataset1.previous_page_number }}&order_by={{ order_by }}">Previous</a>
             </li>
         {% else %}
             <li class="page-item disabled">
@@ -52,29 +64,29 @@
             </li>
         {% endif %}
 
-        {% if companies.number|add:'-4' > 1 %}
-            <li class="page-item"><a class="page-link" href="?page={{ companies.number|add:'-5' }}">&hellip;</a></li>
+        {% if dataset1.number|add:'-4' > 1 %}
+            <li class="page-item"><a class="page-link" href="?page={{ dataset1.number|add:'-5' }}&order_by={{ order_by }}">&hellip;</a></li>
         {% endif %}
 
-        {% for i in companies.paginator.page_range %}
-            {% if companies.number == i %}
+        {% for i in dataset1.page_range %}
+            {% if dataset1.number == i %}
                 <li class="page-item active" aria-current="page">
           <span class="page-link">
             {{ i }}
           </span>
                 </li>
-            {% elif i > companies.number|add:'-5' and i < companies.number|add:'5' %}
-                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+            {% elif i > dataset1.number|add:'-5' and i < dataset1.number|add:'5' %}
+                <li class="page-item"><a class="page-link" href="?page={{ i }}&order_by={{ order_by }}">{{ i }}</a></li>
             {% endif %}
         {% endfor %}
 
-        {% if companies.paginator.num_pages > companies.number|add:'4' %}
-            <li class="page-item"><a class="page-link" href="?page={{ companies.number|add:'5' }}">&hellip;</a></li>
+        {% if dataset1.num_pages > dataset1.number|add:'4' %}
+            <li class="page-item"><a class="page-link" href="?page={{ dataset1.number|add:'5' }}&order_by={{ order_by }}">&hellip;</a></li>
         {% endif %}
 
-        {% if companies.has_next %}
+        {% if dataset1.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ companies.next_page_number }}">Next</a>
+                <a class="page-link" href="?page={{ dataset1.next_page_number }}&order_by={{ order_by }}">Next</a>
             </li>
         {% else %}
             <li class="page-item disabled">

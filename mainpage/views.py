@@ -11,11 +11,12 @@ from django.http import JsonResponse
 mycollection = parsers.get_collection_from_db('db', 'nppes_data')
 npees_data_collection = parsers.get_collection_from_db('db', 'nppes_data')
 companies_data_collection = parsers.get_collection_from_db('db', 'companies_data')
-companies_cik_ein_data = list(companies_data_collection.find({}, {'_id': 0, 'name': 1, 'cik': 1, 'ein': 1}))
+# companies_cik_ein_data = list(companies_data_collection.find({}, {'_id': 0, 'name': 1, 'cik': 1, 'ein': 1}))
 nppes_data_individual_collection = parsers.get_collection_from_db('db', 'nppes_data_individual')
 nppes_data_entities_collection = parsers.get_collection_from_db('db', 'nppes_data_entities')
 count_nppes_data_individual = nppes_data_individual_collection.count_documents({})
 count_nppes_data_entities = nppes_data_entities_collection.count_documents({})
+count_companies_data = companies_data_collection.count_documents({})
 clinical_trial_individual_collection_data = []
 clinical_trial_entities_collection_data = []
 
@@ -33,14 +34,25 @@ def index(request):
 
 
 def sec_company_fillings(request):
+    order_by = request.GET.get('order_by')
     page = request.GET.get('page', 1)
-    paginator = Paginator(companies_cik_ein_data, 500)
-    try:
-        companies = paginator.page(page)
-    except PageNotAnInteger:
-        companies = paginator.page(1)
-    except EmptyPage:
-        companies = paginator.page(paginator.num_pages)
+    num_pages = count_companies_data // 500 + 1
+    page_range = range(1, num_pages + 1)
+    has_previous = True if int(page) > 1 else False
+    number = int(page)
+    previous_page_number = number - 1
+    has_next = True if number < num_pages else False
+    next_page_number = number + 1
+    dataset1 = {'num_pages': num_pages, 'page_range': page_range, 'has_previous': has_previous, 'number': number,
+                'has_next': has_next, 'previous_page_number': previous_page_number,
+                'next_page_number': next_page_number}
+
+
+    companies = companies_data_collection.find({}, {'_id': 0, 'name': 1, 'cik': 1, 'ein': 1}).sort('name').skip(500 * (number - 1)).limit(500)
+
+    if order_by == 'cik':
+        companies = companies_data_collection.find({}, {'_id': 0, 'name': 1, 'cik': 1, 'ein': 1}).sort('cik').skip(500 * (number - 1)).limit(500)
+    # companies = companies_data_collection.find().skip(500 * (number - 1)).limit(500)
     updated_time = parsers.get_collection_from_db('db', 'update_collection').find_one({'name': 'last_update'}).get(
         'update_time')
     count_new_companies = parsers.get_collection_from_db('db', 'update_collection').find_one(
@@ -48,8 +60,8 @@ def sec_company_fillings(request):
         'count_new_companies')
     count_records = companies_data_collection.count_documents({})
     return render(request, 'mainpage/sec_company_fillings.html',
-                  {'companies': companies, 'updated_time': updated_time, 'count_new_companies': count_new_companies,
-                   'count_records': count_records})
+                  {'dataset1':dataset1,'companies': companies, 'updated_time': updated_time, 'count_new_companies': count_new_companies,
+                   'count_records': count_records, 'order_by': order_by})
 
 
 def get_company_data(request, cik):
@@ -148,12 +160,13 @@ def display_clinical_trial_individual(request):
     page = request.GET.get('page', 1)
     num_pages = count_nppes_data_individual // 500 + 1
     page_range = range(1, num_pages + 1)
-    has_previous = True if int(page) > 0 else False
+    has_previous = True if int(page) > 1 else False
     number = int(page)
     previous_page_number = number - 1
     has_next = True if number < num_pages else False
+    next_page_number = number + 1
     dataset1 = {'num_pages': num_pages, 'page_range': page_range, 'has_previous': has_previous, 'number': number,
-                'has_next': has_next, 'previous_page_number': previous_page_number}
+                'has_next': has_next, 'previous_page_number': previous_page_number,'next_page_number':next_page_number}
     part_npi = nppes_data_individual_collection.find().skip(500 * (number - 1)).limit(500)
     return render(request, 'mainpage/nppes_individual.html', context={'dataset': part_npi, 'dataset1': dataset1})
 
@@ -162,11 +175,12 @@ def display_clinical_trial_entities(request):
     page = request.GET.get('page', 1)
     num_pages = count_nppes_data_entities // 500 + 1
     page_range = range(1, num_pages + 1)
-    has_previous = True if int(page) > 0 else False
+    has_previous = True if int(page) > 1 else False
     number = int(page)
     previous_page_number = number - 1
     has_next = True if number < num_pages else False
+    next_page_number = number + 1
     dataset1 = {'num_pages': num_pages, 'page_range': page_range, 'has_previous': has_previous, 'number': number,
-                'has_next': has_next, 'previous_page_number': previous_page_number}
+                'has_next': has_next, 'previous_page_number': previous_page_number, 'next_page_number':next_page_number}
     part_npi = nppes_data_entities_collection.find().skip(500 * (number - 1)).limit(500)
     return render(request, 'mainpage/nppes_entities.html', context={'dataset': part_npi, 'dataset1': dataset1})
