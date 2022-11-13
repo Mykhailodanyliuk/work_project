@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <title>
+        {% block title %}{% endblock %}
+    </title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">Main page</a>
+    </div>
+</nav>
+{% block content %}
+{% endblock %}
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        {% if paginator.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ paginator.previous_page_number }}">Previous</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Previous</a>
+            </li>
+        {% endif %}
+
+        {% if paginator.number|add:'-4' > 1 %}
+            <li class="page-item"><a class="page-link" href="?page={{ paginator.number|add:'-5' }}">&hellip;</a></li>
+        {% endif %}
+
+        {% for i in paginator.page_range %}
+            {% if paginator.number == i %}
+                <li class="page-item active" aria-current="page">
+          <span class="page-link">
+            {{ i }}
+          </span>
+                </li>
+            {% elif i > paginator.number|add:'-5' and i < paginator.number|add:'5' %}
+                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if paginator.num_pages > paginator.number|add:'4' %}
+            <li class="page-item"><a class="page-link" href="?page={{ paginator.number|add:'5' }}">&hellip;</a></li>
+        {% endif %}
+
+        {% if paginator.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ paginator.next_page_number }}">Next</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Next</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+</body>
+</html>

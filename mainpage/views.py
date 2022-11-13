@@ -1,12 +1,7 @@
-import json
-
-import pymongo
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.contrib import messages
 from . import parsers
-from json2html import *
-from django.http import JsonResponse
+from django.template.response import HttpResponse
 
 mycollection = parsers.get_collection_from_db('db', 'nppes_data')
 npees_data_collection = parsers.get_collection_from_db('db', 'nppes_data')
@@ -17,8 +12,6 @@ nppes_data_entities_collection = parsers.get_collection_from_db('db', 'nppes_dat
 count_nppes_data_individual = nppes_data_individual_collection.count_documents({})
 count_nppes_data_entities = nppes_data_entities_collection.count_documents({})
 count_companies_data = companies_data_collection.count_documents({})
-clinical_trial_individual_collection_data = []
-clinical_trial_entities_collection_data = []
 
 
 def error_404(request, exception):
@@ -47,11 +40,12 @@ def sec_company_fillings(request):
                 'has_next': has_next, 'previous_page_number': previous_page_number,
                 'next_page_number': next_page_number}
 
-
-    companies = companies_data_collection.find({}, {'_id': 0, 'name': 1, 'cik': 1, 'ein': 1}).sort('name').skip(500 * (number - 1)).limit(500)
+    companies = companies_data_collection.find({}, {'_id': 0, 'name': 1, 'cik': 1, 'ein': 1}).sort('name').skip(
+        500 * (number - 1)).limit(500)
 
     if order_by == 'cik':
-        companies = companies_data_collection.find({}, {'_id': 0, 'name': 1, 'cik': 1, 'ein': 1}).sort('cik').skip(500 * (number - 1)).limit(500)
+        companies = companies_data_collection.find({}, {'_id': 0, 'name': 1, 'cik': 1, 'ein': 1}).sort('cik').skip(
+            500 * (number - 1)).limit(500)
     # companies = companies_data_collection.find().skip(500 * (number - 1)).limit(500)
     updated_time = parsers.get_collection_from_db('db', 'update_collection').find_one({'name': 'last_update'}).get(
         'update_time')
@@ -60,7 +54,8 @@ def sec_company_fillings(request):
         'count_new_companies')
     count_records = companies_data_collection.count_documents({})
     return render(request, 'mainpage/sec_company_fillings.html',
-                  {'dataset1':dataset1,'companies': companies, 'updated_time': updated_time, 'count_new_companies': count_new_companies,
+                  {'dataset1': dataset1, 'companies': companies, 'updated_time': updated_time,
+                   'count_new_companies': count_new_companies,
                    'count_records': count_records, 'order_by': order_by})
 
 
@@ -124,9 +119,9 @@ def nppes_data(request, npi_id):
 
 def medical_trials(request):
     medical_trial_organizations_collection = parsers.get_collection_from_db('db', 'clinical_trials_organizations')
-    organizations = [record['organization'] for record in medical_trial_organizations_collection.find()]
-    organizations_and_id = [[organization.replace(' ', '_'), organization]
-                            for organization in list(organizations)]
+    organizations_and_id = [[organization.get('organization').replace(' ', '_'), organization.get('organization')]
+                            for organization in
+                            medical_trial_organizations_collection.find({}, {'_id': 0, 'organization': 1})]
     count_organizations = len(organizations_and_id)
 
     page = request.GET.get('page', 1)
@@ -144,43 +139,81 @@ def medical_trials(request):
 def display_organization_trials(request, org_id):
     clinical_trial_organizations_collection = parsers.get_collection_from_db('db', 'clinical_trials_organizations')
     my_list = list(clinical_trial_organizations_collection.find({'organization': org_id.replace('_', ' ')}))
-    print(my_list)
     return render(request, 'mainpage/organization_clinical_trials.html', context={'dataset': my_list[0]})
 
 
 def display_clinical_trial(request, trial_id):
-    print(trial_id)
     col = parsers.get_collection_from_db('db', 'clinical_trials')
     data = col.find_one({'nct_id': trial_id})
-    print(data)
     return render(request, 'mainpage/clinical_trial.html', context={'dataset': data})
 
 
-def display_clinical_trial_individual(request):
+def display_nppes_data_individual(request):
+    paginator = mongo_paginator(request, count_nppes_data_individual)
+    part_npi = nppes_data_individual_collection.find().skip(500 * (int(request.GET.get('page', 1)) - 1)).limit(500)
+    return render(request, 'mainpage/nppes_individual.html', context={'dataset': part_npi, 'paginator': paginator})
+
+
+def display_nppes_data_entities(request):
+    paginator = mongo_paginator(request, count_nppes_data_entities)
+    part_npi = nppes_data_entities_collection.find().skip(500 * (int(request.GET.get('page', 1)) - 1)).limit(500)
+    return render(request, 'mainpage/nppes_entities.html', context={'dataset': part_npi, 'paginator': paginator})
+
+
+def mongo_paginator(request, count_docs):
     page = request.GET.get('page', 1)
-    num_pages = count_nppes_data_individual // 500 + 1
+    num_pages = count_docs // 500 + 1
     page_range = range(1, num_pages + 1)
     has_previous = True if int(page) > 1 else False
     number = int(page)
     previous_page_number = number - 1
     has_next = True if number < num_pages else False
     next_page_number = number + 1
-    dataset1 = {'num_pages': num_pages, 'page_range': page_range, 'has_previous': has_previous, 'number': number,
-                'has_next': has_next, 'previous_page_number': previous_page_number,'next_page_number':next_page_number}
-    part_npi = nppes_data_individual_collection.find().skip(500 * (number - 1)).limit(500)
-    return render(request, 'mainpage/nppes_individual.html', context={'dataset': part_npi, 'dataset1': dataset1})
+    paginator = {'num_pages': num_pages, 'page_range': page_range, 'has_previous': has_previous, 'number': number,
+                 'has_next': has_next, 'previous_page_number': previous_page_number,
+                 'next_page_number': next_page_number}
+    return paginator
 
 
-def display_clinical_trial_entities(request):
-    page = request.GET.get('page', 1)
-    num_pages = count_nppes_data_entities // 500 + 1
-    page_range = range(1, num_pages + 1)
-    has_previous = True if int(page) > 1 else False
-    number = int(page)
-    previous_page_number = number - 1
-    has_next = True if number < num_pages else False
-    next_page_number = number + 1
-    dataset1 = {'num_pages': num_pages, 'page_range': page_range, 'has_previous': has_previous, 'number': number,
-                'has_next': has_next, 'previous_page_number': previous_page_number, 'next_page_number':next_page_number}
-    part_npi = nppes_data_entities_collection.find().skip(500 * (number - 1)).limit(500)
-    return render(request, 'mainpage/nppes_entities.html', context={'dataset': part_npi, 'dataset1': dataset1})
+def my_search(request):
+    # print(request.GET)
+    # print(request.GET['cik'])
+    return render(request, 'mainpage/search_page.html')
+
+
+def sec_company_tickers_search(request):
+    cik = request.GET['cik']
+    companies_collection = parsers.get_collection_from_db('db', 'companies')
+    companies = list(companies_collection.find({'cik_str': int(cik)}))
+    print(list(companies))
+    return render(request, 'mainpage/sec_search.html',
+                  {'companies': companies})
+
+
+def sec_company_fillings_search(request):
+    cik = request.GET['cik']
+    companies = list(companies_data_collection.find({'cik': cik}))
+    return render(request, 'mainpage/sec_company_fillings_search.html',
+                  {'companies': companies})
+
+
+def npi_data_search(request):
+    cik = request.GET['cik']
+    npi_data_collection = parsers.get_collection_from_db('db', 'npi_data')
+    companies = list(npi_data_collection.find({'cik': str(cik)}))
+    return render(request, 'mainpage/npi_data_search.html',
+                  {'npi_data': companies})
+
+
+def nppes_data_search(request):
+    NPI = request.GET['NPI']
+    companies = list(npees_data_collection.find({'NPI': NPI}))
+    try:
+        if companies[0].get('Provider Organization Name (Legal Business Name)'):
+            return render(request, 'mainpage/nppes_entities.html',
+                          {'dataset': companies})
+        else:
+            return render(request, 'mainpage/nppes_individual.html', {'dataset': companies})
+    except :
+        return render(request, 'mainpage/404.html')
+

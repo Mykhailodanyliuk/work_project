@@ -1,84 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-    <title>NPPES DATA INDIVIDUAL</title>
-</head>
-<body>
-<nav class="navbar navbar-expand-lg bg-light">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="/">Main page</a>
-    </div>
-</nav>
-{#{{ dataset }}#}
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        <th>NPI</th>
-        <th>First Name</th>
-        <th>Last Name</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for data in dataset %}
+{% extends 'mainpage/layout_pagination.html' %}
+
+{% block title %}
+    NPPES INDIVIDUAL
+{% endblock title %}
+
+{% block content %}
+    {#{{ dataset }}#}
+    <table class="table table-bordered">
+        <thead>
         <tr>
-            {% for key, value in data.items %}
-                {% if key == '_id' %}
-                {% elif key == 'NPI' %}
-                    <td><a href="{% url 'individual_npi' value %}">{{ value }}</a></td>
-                {% else %}
-                    <td>{{ value }}</td>
-                {% endif %}
-            {% endfor %}
+            <th>NPI</th>
+            <th>First Name</th>
+            <th>Last Name</th>
         </tr>
+        </thead>
+        <tbody>
+        {% for data in dataset %}
+            <tr>
+                {% for key, value in data.items %}
+                    {% if key == '_id' %}
+                    {% elif key == 'NPI' %}
+                        <td><a href="{% url 'individual_npi' value %}">{{ value }}</a></td>
+                    {% else %}
+                        <td>{{ value }}</td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
 
-    {% endfor %}
-    </tbody>
-</table>
-<nav aria-label="Page navigation example">
-    <ul class="pagination justify-content-center">
-        {% if dataset1.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ dataset1.previous_page_number }}">Previous</a>
-            </li>
-        {% else %}
-            <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Previous</a>
-            </li>
-        {% endif %}
-
-        {% if dataset1.number|add:'-4' > 1 %}
-            <li class="page-item"><a class="page-link" href="?page={{ dataset1.number|add:'-5' }}">&hellip;</a></li>
-        {% endif %}
-
-        {% for i in dataset1.page_range %}
-            {% if dataset1.number == i %}
-                <li class="page-item active" aria-current="page">
-          <span class="page-link">
-            {{ i }}
-          </span>
-                </li>
-            {% elif i > dataset1.number|add:'-5' and i < dataset1.number|add:'5' %}
-                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
-            {% endif %}
         {% endfor %}
-
-        {% if dataset1.num_pages > dataset1.number|add:'4' %}
-            <li class="page-item"><a class="page-link" href="?page={{ dataset1.number|add:'5' }}">&hellip;</a></li>
-        {% endif %}
-
-        {% if dataset1.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ dataset1.next_page_number }}">Next</a>
-            </li>
-        {% else %}
-            <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Next</a>
-            </li>
-        {% endif %}
-    </ul>
-</nav>
-</body>
-</html>
+        </tbody>
+    </table>
+{% endblock content %}
