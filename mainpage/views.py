@@ -64,10 +64,12 @@ def get_company_data(request, cik):
     company_data = col.find_one({'cik': cik})
     if not company_data:
         company_data = col.find_one({'cik': cik.zfill(10)})
-    if company_data:
-        filings_recent = company_data.get('filings').get('recent').items()
-        return render(request, 'mainpage/company_data.html',
-                      context={'dataset': company_data, 'filings_recent': filings_recent})
+    # if company_data:
+    filings_recent = company_data.get('filings').get('recent').items()
+    cik = cik.lstrip('0')
+    links = [f'https://www.sec.gov/Archives/edgar/data/{cik}/{i.replace("-","")}/{i}-index.html' for i in company_data.get('filings').get('recent').get('accessionNumber')]
+    return render(request, 'mainpage/company_data.html',
+                  context={'dataset': company_data, 'filings_recent': filings_recent, 'links': links})
 
 
 def sec_company_tickers(request):
@@ -184,7 +186,7 @@ def my_search(request):
 def sec_company_tickers_search(request):
     cik = request.GET['cik']
     companies_collection = parsers.get_collection_from_db('db', 'companies')
-    companies = list(companies_collection.find({'cik_str': int(cik)}))
+    companies = list(companies_collection.find({'cik_str': int(cik)})) if cik.isnumeric() else []
     print(list(companies))
     return render(request, 'mainpage/sec_search.html',
                   {'companies': companies})

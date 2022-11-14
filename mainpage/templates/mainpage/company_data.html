@@ -14,7 +14,7 @@
     </div>
 </nav>
 <table class="table table-bordered">
-    <tbody>
+    <td>
     {% for key, value in dataset.items %}
         {% if key == 'addresses' %}
             <tr>
@@ -105,10 +105,23 @@
                     </table>
                 </td>
             </tr>
+            <tr>
+                <td>sec links</td>
+                <td>
+                    {% for link in links %}
+                        <a href="{{ link }}">{{ link }}</a>
+                    {% endfor %}
+                </td>
+            </tr>
         {% elif key == 'tickers' %}
             <tr>
                 <td>{{ key }}</td>
                 <td>{{ value|join:", " }}</td>
+            </tr>
+        {% elif key == 'ein' %}
+            <tr>
+                <td>ein/irs</td>
+                <td>{{ value }}</td>
             </tr>
         {% elif key == 'exchanges' %}
             <tr>

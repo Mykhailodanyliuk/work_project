@@ -11,18 +11,22 @@
     <div class="container-fluid">
         <a class="navbar-brand" href="/">Main page</a>
     </div>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <form action="/sec_company_fillings_search" class="form-inline my-2 my-lg-0", method="get">
-            <input class="form-control mr-sm-2" type="search" placeholder="Enter CIK" aria-label="Search", name="cik">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
 
-    </div>
 </nav>
 <a>Updated: {{ updated_time }}</a><br>
 <a>New companies: {{ count_new_companies }}</a><br>
 <a>The parser is updated: every 12 hours</a><br>
 <a>Count records: {{ count_records }}</a><br>
+<br>
+<form action="/sec_company_fillings_search" , method="get">
+    <div class="input-group">
+        <div class="col-xs-3">
+            <input class="form-control mr-sm-2" type="search" placeholder="Enter CIK" aria-label="Search" , name="cik">
+        </div>
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </div>
+</form>
+<br>
 
 {#<a href="{% url 'sec_company_fillings'%}?sort=name">Name </a>#}
 {##}
@@ -62,7 +66,8 @@
     <ul class="pagination justify-content-center">
         {% if dataset1.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ dataset1.previous_page_number }}&order_by={{ order_by }}">Previous</a>
+                <a class="page-link"
+                   href="?page={{ dataset1.previous_page_number }}&order_by={{ order_by }}">Previous</a>
             </li>
         {% else %}
             <li class="page-item disabled">
@@ -71,7 +76,9 @@
         {% endif %}
 
         {% if dataset1.number|add:'-4' > 1 %}
-            <li class="page-item"><a class="page-link" href="?page={{ dataset1.number|add:'-5' }}&order_by={{ order_by }}">&hellip;</a></li>
+            <li class="page-item"><a class="page-link"
+                                     href="?page={{ dataset1.number|add:'-5' }}&order_by={{ order_by }}">&hellip;</a>
+            </li>
         {% endif %}
 
         {% for i in dataset1.page_range %}
@@ -87,7 +94,9 @@
         {% endfor %}
 
         {% if dataset1.num_pages > dataset1.number|add:'4' %}
-            <li class="page-item"><a class="page-link" href="?page={{ dataset1.number|add:'5' }}&order_by={{ order_by }}">&hellip;</a></li>
+            <li class="page-item"><a class="page-link"
+                                     href="?page={{ dataset1.number|add:'5' }}&order_by={{ order_by }}">&hellip;</a>
+            </li>
         {% endif %}
 
         {% if dataset1.has_next %}
