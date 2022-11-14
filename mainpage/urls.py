@@ -21,6 +21,7 @@ urlpatterns = [
     path('sec_company_fillings_search', views.sec_company_fillings_search, name='sec_company_fillings_search'),
     path('npi_data_search', views.npi_data_search, name='npi_data_search'),
     path('nppes_data_search', views.nppes_data_search, name='nppes_data_search'),
+    path('clinical_trials_organization_search', views.clinical_trials_organization_search, name='clinical_trials_organization_search'),
 ]
 
 

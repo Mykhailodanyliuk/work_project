@@ -1,0 +1,28 @@
+{% extends 'mainpage/layout_pagination.html' %}
+
+{% block title %}
+    NPPES SeARCH
+{% endblock title %}
+
+{% block content %}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>NPI</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for data in dataset %}
+            <tr>
+                {% for key, value in data.items%}
+                {% if key == '_id' %}
+                {% elif key == 'NPI' %}
+                    <td><a href="{% url 'entities_npi' value  %}">{{ value }}</a></td>
+                {% endif %}
+                {% endfor %}
+            </tr>
+
+        {% endfor %}
+        </tbody>
+</table>
+{% endblock content %}

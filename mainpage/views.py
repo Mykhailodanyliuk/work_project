@@ -12,7 +12,8 @@ nppes_data_entities_collection = parsers.get_collection_from_db('db', 'nppes_dat
 count_nppes_data_individual = nppes_data_individual_collection.count_documents({})
 count_nppes_data_entities = nppes_data_entities_collection.count_documents({})
 count_companies_data = companies_data_collection.count_documents({})
-
+clinical_trial_organizations_collection = parsers.get_collection_from_db('db', 'clinical_trials_organizations')
+medical_trial_organizations_collection = parsers.get_collection_from_db('db', 'clinical_trials_organizations')
 
 def error_404(request, exception):
     return render(request, 'mainpage/404.html')
@@ -67,7 +68,8 @@ def get_company_data(request, cik):
     # if company_data:
     filings_recent = company_data.get('filings').get('recent').items()
     cik = cik.lstrip('0')
-    links = [f'https://www.sec.gov/Archives/edgar/data/{cik}/{i.replace("-","")}/{i}-index.html' for i in company_data.get('filings').get('recent').get('accessionNumber')]
+    links = [f'https://www.sec.gov/Archives/edgar/data/{cik}/{i.replace("-", "")}/{i}-index.html' for i in
+             company_data.get('filings').get('recent').get('accessionNumber')]
     return render(request, 'mainpage/company_data.html',
                   context={'dataset': company_data, 'filings_recent': filings_recent, 'links': links})
 
@@ -139,7 +141,7 @@ def medical_trials(request):
 
 
 def display_organization_trials(request, org_id):
-    clinical_trial_organizations_collection = parsers.get_collection_from_db('db', 'clinical_trials_organizations')
+    # clinical_trial_organizations_collection = parsers.get_collection_from_db('db', 'clinical_trials_organizations')
     my_list = list(clinical_trial_organizations_collection.find({'organization': org_id.replace('_', ' ')}))
     return render(request, 'mainpage/organization_clinical_trials.html', context={'dataset': my_list[0]})
 
@@ -194,7 +196,7 @@ def sec_company_tickers_search(request):
 
 def sec_company_fillings_search(request):
     cik = request.GET['cik']
-    companies = list(companies_data_collection.find({'cik': cik}))
+    companies = list(companies_data_collection.find({'cik': {'$regex': cik}}))
     return render(request, 'mainpage/sec_company_fillings_search.html',
                   {'companies': companies})
 
@@ -202,20 +204,22 @@ def sec_company_fillings_search(request):
 def npi_data_search(request):
     cik = request.GET['cik']
     npi_data_collection = parsers.get_collection_from_db('db', 'npi_data')
-    companies = list(npi_data_collection.find({'cik': str(cik)}))
+    companies = list(npi_data_collection.find({'cik': {'$regex': str(cik)}}))
     return render(request, 'mainpage/npi_data_search.html',
                   {'npi_data': companies})
 
 
 def nppes_data_search(request):
+    print(request.GET)
     NPI = request.GET['NPI']
-    companies = list(npees_data_collection.find({'NPI': NPI}))
-    try:
-        if companies[0].get('Provider Organization Name (Legal Business Name)'):
-            return render(request, 'mainpage/nppes_entities.html',
-                          {'dataset': companies})
-        else:
-            return render(request, 'mainpage/nppes_individual.html', {'dataset': companies})
-    except :
-        return render(request, 'mainpage/404.html')
+    companies = list(npees_data_collection.find({'NPI': {'$regex': NPI}}))
+    return render(request, 'mainpage/nppes_data_search.html', {'dataset': companies})
+
+def clinical_trials_organization_search(request):
+    NPI = request.GET['organization']
+    dataset = [[organization.get('organization').replace(' ', '_'), organization.get('organization')]
+                            for organization in
+                            medical_trial_organizations_collection.find({'organization': {'$regex': NPI}}, {'_id': 0, 'organization': 1})]
+    print(dataset)
+    return render(request, 'mainpage/clinical_trials_organization_search.html', {'dataset': dataset})
 

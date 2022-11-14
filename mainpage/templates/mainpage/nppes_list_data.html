@@ -11,14 +11,26 @@
     <div class="container-fluid">
         <a class="navbar-brand" href="/">Main page</a>
     </div>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <form action="/nppes_data_search" class="form-inline my-2 my-lg-0", method="get">
-            <input class="form-control mr-sm-2" type="search" placeholder="Enter NPI" aria-label="Search", name="NPI">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-
-    </div>
+{#    <div class="collapse navbar-collapse" id="navbarSupportedContent">#}
+{#        <form action="/nppes_data_search" class="form-inline my-2 my-lg-0", method="get">#}
+{#            <input class="form-control mr-sm-2" type="search" placeholder="Enter NPI" aria-label="Search", name="NPI">#}
+{#            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>#}
+{#        </form>#}
+{##}
+{#    </div>#}
 </nav>
+
+<br>
+<form action="/nppes_data_search" , method="get">
+    <div class="input-group">
+        <div class="col-xs-3">
+            <input class="form-control mr-sm-2" type="search" placeholder="Enter NPI" aria-label="Search" , name="NPI">
+        </div>
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </div>
+</form>
+<br>
+
 <a class="btn btn-primary" href="nppes_data/individual/" role="button">Indiviual</a>
 <a class="btn btn-primary" href="nppes_data/entities/" role="button">Entity</a>
 
