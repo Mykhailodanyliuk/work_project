@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-    <title>Companies data</title>
+    <title>Title</title>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg bg-light">
@@ -12,25 +12,15 @@
         <a class="navbar-brand" href="/">Main page</a>
     </div>
 </nav>
-
+<h3>{{ dataset.organization }}</h3>
 <table class="table table-bordered">
-    <thead>
-    <tr>
-        <th>Company name</th>
-        <th>CIK</th>
-        <th>EIN</th>
-    </tr>
-    </thead>
     <tbody>
-    {% for company in companies %}
+    {% for trial in dataset.NCTId %}
         <tr>
-            <td><a href="/companies_data/{{ company.cik }}"> {{ company.name }}</a></td>
-            <td>{{ company.cik }}</td>
-            <td>{{ company.ein }}</td>
+            <td><a href="{% url 'clinical_trial' trial %}">{{ trial }}</a></td>
         </tr>
     {% endfor %}
     </tbody>
 </table>
-
 </body>
 </html>

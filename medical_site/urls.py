@@ -20,6 +20,9 @@ from django.conf.urls import handler404 , handler500
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('mainpage.urls')),
+    path('clinical_trials/', include('clinical_trials.urls')),
+    path('sec/', include('sec.urls')),
+    path('hhs/', include('hhs.urls')),
 
 ]
 

@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'mainpage',
+    'clinical_trials',
+    'sec',
+    'hhs'
 ]
 
 # CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -61,6 +64,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             BASE_DIR / 'mainpage' / 'templates',
+            BASE_DIR / 'clinical_trials' / 'templates',
         ],
         'APP_DIRS': True,
         'OPTIONS': {

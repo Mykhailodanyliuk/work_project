@@ -14,7 +14,7 @@
 </nav>
 
 <br>
-<form action="/clinical_trials_organization_search" , method="get">
+<form action="clinical_trials/search", method="get">
     <div class="input-group">
         <div class="col-xs-3">
             <input class="form-control mr-sm-2" type="search" placeholder="Enter NAME" aria-label="Search" , name="organization">
@@ -23,9 +23,6 @@
     </div>
 </form>
 <br>
-{#  <a>Updated: {{updated_time}}</a><br>#}
-{#  <a>New companies: {{count_new_companies}}</a><br>#}
-{#  <a>The parser is updated: every 12 hours</a><br>#}
 <a>Count organizations: {{ count }}</a>
 
 <table class="table table-bordered">
@@ -86,6 +83,5 @@
         {% endif %}
     </ul>
 </nav>
-<!--end of Pagination-->
 </body>
 </html>
