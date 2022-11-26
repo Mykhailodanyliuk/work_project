@@ -6,5 +6,5 @@ urlpatterns = [
     path('sec_company_fillings', views.sec_company_fillings, name='sec_company_fillings'),
     path('sec_company_tickers_search', views.sec_company_tickers_search, name='sec_company_tickers_search'),
     path('sec_company_fillings_search', views.sec_company_fillings_search, name='sec_company_fillings_search'),
-    path('sec_company_fillings/<cik>/', views.display_sec_company_data, name='get_company_data'),
+    path('sec_company_fillings/<cik>', views.display_sec_company_data, name='get_company_data'),
 ]
