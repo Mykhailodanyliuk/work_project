@@ -1,29 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-    <title>Main page</title>
-</head>
-<body>
+{% extends 'mainpage/base.html' %}
 
-<ul class="nav justify-content-center">
-    <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="sec/sec_company_tickers">SEC Company Tickers</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="sec/sec_company_fillings">SEC Company Fillings</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="npi_data">NPI (third-party sources)</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="hhs/">HHS</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="clinical_trials">Clinical Trials</a>
-    </li>
-</ul>
-</body>
-</html>
+{% block title %}Main page{% endblock %}
+
+{% block content %}
+    <ul class="nav justify-content-center">
+        <li class="nav-item">
+            <a class="btn btn-secondary" href="sec/sec_company_tickers" role="button" aria-expanded="false">SEC Company Tickers</a>
+        </li>
+        <li class="nav-item">
+            <a class="btn btn-secondary" href="sec/sec_company_fillings" role="button" aria-expanded="false">SEC Company Fillings</a>
+        </li>
+        <li class="nav-item">
+            <a class="btn btn-secondary" href="npi_data" role="button" aria-expanded="false">NPI (third-party sources)</a>
+        </li>
+        <li class="nav-item">
+            <a class="btn btn-secondary" href="hhs/" role="button" aria-expanded="false">HHS</a>
+        </li>
+        <li>
+            <a class="btn btn-secondary" href="clinical_trials" role="button" aria-expanded="false">Clinical Trials</a>
+        </li>
+        <div class="dropdown">
+            <a class="btn btn-secondary" href="#" role="button" id="dropdownMenuLink"
+               data-bs-toggle="dropdown" aria-expanded="false">
+                FDA.GOV
+            </a>
+
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <li><a class="dropdown-item" href="fda/device_event">Device Event</a></li>
+                <li><a class="dropdown-item" href="fda/device">Device</a></li>
+                <li><a class="dropdown-item" href="fda/device_enforcement">Device Enforcement</a></li>
+                <li><a class="dropdown-item" href="fda/device_recall">Device Recall</a></li>
+                <li><a class="dropdown-item" href="fda/device_classification">Device Classification</a></li>
+                <li><a class="dropdown-item" href="fda/device_covid19">Device Covid-19</a></li>
+                <li><a class="dropdown-item" href="fda/device_pma">Device PMA</a></li>
+                <li><a class="dropdown-item" href="fda/device_registration_listings">Device Registration Listings</a></li>
+                <li><a class="dropdown-item" href="fda/device_udi">Device UDI</a></li>
+                <li><a class="dropdown-item" href="fda/drug_enforcement">Drug Enforcement</a></li>
+                <li><a class="dropdown-item" href="fda/drug_event">Drug Event</a></li>
+                <li><a class="dropdown-item" href="fda/drug_ndc">Drug NDC</a></li>
+                <li><a class="dropdown-item" href="fda/food_enforcement">Food Enforcement</a></li>
+                <li><a class="dropdown-item" href="fda/food_event">Food Event</a></li>
+            </ul>
+        </div>
+    </ul>
+{% endblock %}

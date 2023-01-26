@@ -5,6 +5,7 @@ from mainpage import parsers
 clinical_trial_organizations_collection = parsers.get_collection_from_db('db', 'clinical_trials_organizations')
 clinical_trials_collection = parsers.get_collection_from_db('db', 'clinical_trials')
 
+
 def display_clinical_trials_organizations(request):
     organizations_and_id = [[organization.get('organization').replace(' ', '_'), organization.get('organization')]
                             for organization in
@@ -19,7 +20,8 @@ def display_clinical_trials_organizations(request):
     except EmptyPage:
         part_organizations = paginator.page(paginator.num_pages)
     return render(request, 'clinical_trials/clinical_trials_organizations.html',
-                  context={'dataset': part_organizations, 'count': count_organizations})
+                  context={'dataset': part_organizations, 'count': count_organizations,
+                           'paginator': part_organizations})
 
 
 def display_organization_trials(request, org_id):
@@ -38,4 +40,5 @@ def clinical_trials_organization_search(request):
                for organization in
                clinical_trial_organizations_collection.find({'organization': {'$regex': npi}},
                                                             {'_id': 0, 'organization': 1})]
-    return render(request, 'clinical_trials/clinical_trials_organization_search.html', {'dataset': dataset})
+    return render(request, 'clinical_trials/clinical_trials_organization_search.html',
+                  {'dataset': dataset, 'paginator': dataset})

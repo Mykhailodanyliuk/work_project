@@ -1,0 +1,31 @@
+{% extends 'mainpage/base.html' %}
+
+{% block title %} Device Covid-19 {% endblock %}
+{% block content %}
+    <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Main page</a>
+        </div>
+    </nav>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Sample ID</th>
+            <th>Lot Number</th>
+            <th>Device</th>
+            <th>Manufacturer</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for obj in context_data %}
+            <tr>
+                <td><a href="{% url 'fda_device_covid19_data' obj.id %}">{{ obj.sample_id }}</a></td>
+                <td>{{ obj.lot_number }}</td>
+                <td>{{ obj.device }}</td>
+                <td>{{ obj.manufacturer }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% include 'mainpage/paginator.html' %}
+{% endblock %}

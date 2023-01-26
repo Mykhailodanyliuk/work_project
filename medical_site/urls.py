@@ -23,6 +23,8 @@ urlpatterns = [
     path('clinical_trials/', include('clinical_trials.urls')),
     path('sec/', include('sec.urls')),
     path('hhs/', include('hhs.urls')),
+    path('fda/', include('fda.urls')),
+
 
 ]
 

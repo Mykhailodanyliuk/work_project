@@ -1,0 +1,27 @@
+{% extends 'mainpage/base.html' %}
+
+{% block title %} Food Enforcement {% endblock %}
+{% block content %}
+    <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Main page</a>
+        </div>
+    </nav>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Event ID</th>
+            <th>Recalling Firm</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for obj in context_data %}
+            <tr>
+                <td><a href="{% url 'fda_food_enforcement_data' obj.id %}">{{ obj.event_id }}</a></td>
+                <td>{{ obj.recalling_firm }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% include 'mainpage/paginator.html' %}
+{% endblock %}

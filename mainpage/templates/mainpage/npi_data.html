@@ -1,28 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-    <title>NPI data</title>
-</head>
-<body>
+{% extends 'mainpage/base.html' %}
+{% block title %} NPI data {% endblock %}
+{% block content %}
 <nav class="navbar navbar-expand-lg bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="/">Main page</a>
     </div>
-{#    <div class="collapse navbar-collapse" id="navbarSupportedContent">#}
-{#        <form action="/npi_data_search" class="form-inline my-2 my-lg-0", method="get">#}
-{#            <input class="form-control mr-sm-2" type="search" placeholder="Enter CIK" aria-label="Search", name="cik">#}
-{#            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>#}
-{#        </form>#}
-{##}
-{#    </div>#}
 </nav>
-<a>Updated: {{ updated_time }}</a><br>
-<a>New npi: {{ count_new_npis }}</a><br>
-<a>The parser is updated: every 12 hours</a><br>
-<a>Count records: {{ count_records }}</a><br>
+{% include 'mainpage/counter.html' %}
 <br>
 <form action="/npi_data_search" , method="get">
     <div class="input-group">
@@ -50,5 +34,5 @@
     {% endfor %}
     </tbody>
 </table>
-</body>
-</html>
+{% include 'mainpage/paginator.html' %}
+{% endblock %}

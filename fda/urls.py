@@ -1,0 +1,33 @@
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('device_event', views.fda_device_event_page, name='fda_device_event_page'),
+    path('device_event/<pk>', views.fda_device_event_data, name='fda_device_event_data'),
+    path('device', views.fda_device_page, name='fda_device_page'),
+    path('device/<pk>', views.fda_device_data, name='fda_device_data'),
+    path('device_enforcement', views.fda_device_enforcement_page, name='fda_device_enforcement_page'),
+    path('device_enforcement/<pk>', views.fda_device_enforcement_data, name='fda_device_enforcement_data'),
+    path('device_recall', views.fda_device_recall_page, name='fda_device_recall_page'),
+    path('device_recall/<pk>', views.fda_device_recall_data, name='fda_device_recall_data'),
+    path('device_classification', views.fda_device_classification_page, name='fda_device_classification_page'),
+    path('device_classification/<pk>', views.fda_device_classification_data, name='fda_device_classification_data'),
+    path('device_covid19', views.fda_device_covid19_page, name='fda_device_covid19_page'),
+    path('device_covid19/<pk>', views.fda_device_covid19_data, name='fda_device_covid19_data'),
+    path('device_pma', views.fda_device_pma_page, name='fda_device_pma_page'),
+    path('device_pma/<pk>', views.fda_device_pma_data, name='fda_device_pma_data'),
+    path('device_registration_listings', views.fda_device_registration_listings_page, name='fda_device_registration_listings_page'),
+    path('device_registration_listings/<pk>', views.fda_device_registration_listings_data, name='fda_device_registration_listings_data'),
+    path('device_udi', views.fda_device_udi_page, name='fda_device_udi_page'),
+    path('device_udi/<pk>', views.fda_device_udi_data, name='fda_device_udi_data'),
+    path('drug_enforcement', views.fda_drug_enforcement_page, name='fda_drug_enforcement_page'),
+    path('drug_enforcement/<pk>', views.fda_drug_enforcement_data, name='fda_drug_enforcement_data'),
+    path('drug_event', views.fda_drug_event_page, name='fda_drug_event_page'),
+    path('drug_event/<pk>', views.fda_drug_event_data, name='fda_drug_event_data'),
+    path('drug_ndc', views.fda_drug_ndc_page, name='fda_drug_ndc_page'),
+    path('drug_ndc/<pk>', views.fda_drug_ndc_data, name='fda_drug_ndc_data'),
+    path('food_enforcement', views.fda_food_enforcement_page, name='fda_food_enforcement_page'),
+    path('food_enforcement/<pk>', views.fda_food_enforcement_data, name='fda_food_enforcement_data'),
+    path('food_event', views.fda_food_event_page, name='fda_food_event_page'),
+    path('food_event/<pk>', views.fda_food_event_data, name='fda_food_event_data'),
+]

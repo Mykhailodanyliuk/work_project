@@ -1,0 +1,29 @@
+{% extends 'mainpage/base.html' %}
+
+{% block title %} Device Event {% endblock %}
+{% block content %}
+    <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Main page</a>
+        </div>
+    </nav>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Generic Name</th>
+            <th>Brand Name</th>
+            <th>Udi di</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for event in context_data %}
+            <tr>
+                <td><a href="{% url 'fda_device_event_data' event.id %}">{{ event.generic_name }}</a></td>
+                <td>{{ event.brand_name }}</td>
+                <td>{{ event.udi_di }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% include 'mainpage/paginator.html' %}
+{% endblock %}

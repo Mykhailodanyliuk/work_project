@@ -16,9 +16,11 @@ def sec_company_fillings(request):
     previous_page_number = number - 1
     has_next = True if number < num_pages else False
     next_page_number = number + 1
-    dataset1 = {'num_pages': num_pages, 'page_range': page_range, 'has_previous': has_previous, 'number': number,
-                'has_next': has_next, 'previous_page_number': previous_page_number,
-                'next_page_number': next_page_number}
+    dataset1 = {
+        'paginator': {'num_pages': num_pages, 'page_range': page_range, 'previous_page_number': previous_page_number},
+        'has_previous': has_previous, 'number': number,
+        'has_next': has_next,
+        'next_page_number': next_page_number}
 
     companies = companies_data_collection.find({}, {'_id': 0, 'name': 1, 'cik': 1, 'ein': 1}).sort('name').skip(
         500 * (number - 1)).limit(500)
@@ -29,14 +31,14 @@ def sec_company_fillings(request):
     # companies = companies_data_collection.find().skip(500 * (number - 1)).limit(500)
     updated_time = parsers.get_collection_from_db('db', 'update_collection').find_one({'name': 'last_update'}).get(
         'update_time')
-    count_new_companies = parsers.get_collection_from_db('db', 'update_collection').find_one(
+    count_new_records = parsers.get_collection_from_db('db', 'update_collection').find_one(
         {'name': 'new_companies'}).get(
         'count_new_companies')
     count_records = companies_data_collection.count_documents({})
+    counter_data = {'updated_time': updated_time, 'count_new_records': count_new_records, 'renewal_period': '',
+                    'count_records': count_records}
     return render(request, 'sec/sec_company_fillings.html',
-                  {'dataset1': dataset1, 'companies': companies, 'updated_time': updated_time,
-                   'count_new_companies': count_new_companies,
-                   'count_records': count_records, 'order_by': order_by})
+                  {'paginator': dataset1, 'companies': companies, 'counter_data': counter_data, 'order_by': order_by})
 
 
 def display_sec_company_data(request, cik):
@@ -63,7 +65,6 @@ def display_sec_company_data(request, cik):
         for k in range(filings_len):
             part_data.append(filings_values[k][m])
         fillings_all_data.append(part_data)
-    print(fillings_all_data[0])
     return render(request, 'sec/sec_company_data.html',
                   context={'dataset': company_data, 'filings_recent': filings_recent, 'links': links,
                            'fillings_all_data': fillings_all_data})
@@ -82,20 +83,20 @@ def sec_company_tickers(request):
         companies = paginator.page(paginator.num_pages)
     updated_time = parsers.get_collection_from_db('db', 'update_collection').find_one({'name': 'last_update'}).get(
         'update_time')
-    count_new_companies = parsers.get_collection_from_db('db', 'update_collection').find_one(
+    count_new_records = parsers.get_collection_from_db('db', 'update_collection').find_one(
         {'name': 'new_companies'}).get(
         'count_new_companies')
     count_records = companies_collection.count_documents({})
+    counter_data = {'updated_time': updated_time, 'count_new_records': count_new_records, 'renewal_period': '',
+                    'count_records': count_records}
     return render(request, 'sec/sec_company_tickers.html',
-                  {'companies': companies, 'updated_time': updated_time, 'count_new_companies': count_new_companies,
-                   'count_records': count_records})
+                  {'companies': companies, 'counter_data': counter_data, 'paginator': companies})
 
 
 def sec_company_tickers_search(request):
     cik = request.GET['cik']
     companies_collection = parsers.get_collection_from_db('db', 'companies')
     companies = list(companies_collection.find({'cik_str': int(cik)})) if cik.isnumeric() else []
-    print(list(companies))
     return render(request, 'sec/sec_company_tickers_search.html',
                   {'companies': companies})
 

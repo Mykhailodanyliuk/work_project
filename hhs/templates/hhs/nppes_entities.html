@@ -1,31 +1,37 @@
-{% extends 'mainpage/layout_pagination.html' %}
+{% extends 'mainpage/base.html' %}
 
 {% block title %}
     NPPES INDIVIDUAL
 {% endblock title %}
 
 {% block content %}
+    <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Main page</a>
+        </div>
+    </nav>
     <table class="table table-bordered">
         <thead>
-            <tr>
-                <th>NPI</th>
-                <th>Business name</th>
-            </tr>
+        <tr>
+            <th>NPI</th>
+            <th>Business name</th>
+        </tr>
         </thead>
         <tbody>
         {% for data in dataset %}
             <tr>
-                {% for key, value in data.items%}
-                {% if key == '_id' %}
-                {% elif key == 'NPI' %}
-                    <td><a href="{% url 'entities_npi' value  %}">{{ value }}</a></td>
-                {% else %}
-                    <td>{{ value}}</td>
-                {% endif %}
+                {% for key, value in data.items %}
+                    {% if key == '_id' %}
+                    {% elif key == 'NPI' %}
+                        <td><a href="{% url 'entities_npi' value %}">{{ value }}</a></td>
+                    {% else %}
+                        <td>{{ value }}</td>
+                    {% endif %}
                 {% endfor %}
             </tr>
 
         {% endfor %}
         </tbody>
-</table>
+    </table>
+    {% include 'mainpage/paginator.html' %}
 {% endblock content %}

@@ -1,0 +1,29 @@
+{% extends 'mainpage/base.html' %}
+
+{% block title %} Device Enforcement {% endblock %}
+{% block content %}
+    <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Main page</a>
+        </div>
+    </nav>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Device Model</th>
+            <th>Medical Specialty Description</th>
+            <th>Regulation Number</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for obj in context_data %}
+            <tr>
+                <td><a href="{% url 'fda_device_classification_data' obj.id %}">{{ obj.device_name }}</a></td>
+                <td>{{ obj.medical_specialty_description }}</td>
+                <td>{{ obj.regulation_number }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% include 'mainpage/paginator.html' %}
+{% endblock %}

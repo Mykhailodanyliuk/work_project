@@ -1,0 +1,27 @@
+{% extends 'mainpage/base.html' %}
+
+{% block title %} Drug NDC {% endblock %}
+{% block content %}
+    <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Main page</a>
+        </div>
+    </nav>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Product NDC</th>
+            <th>Brand Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for obj in context_data %}
+            <tr>
+                <td><a href="{% url 'fda_drug_ndc_data' obj.id %}">{{ obj.product_ndc }}</a></td>
+                <td>{{ obj.labeler_name }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% include 'mainpage/paginator.html' %}
+{% endblock %}

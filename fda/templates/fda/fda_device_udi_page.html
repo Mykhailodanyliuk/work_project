@@ -1,0 +1,29 @@
+{% extends 'mainpage/base.html' %}
+
+{% block title %} Device UDI {% endblock %}
+{% block content %}
+    <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Main page</a>
+        </div>
+    </nav>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Public Device Record Key</th>
+            <th>Device Description</th>
+            <th>Brand Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for obj in context_data %}
+            <tr>
+                <td><a href="{% url 'fda_device_udi_data' obj.id %}">{{ obj.public_device_record_key }}</a></td>
+                <td>{{ obj.device_description }}</td>
+                <td>{{ obj.brand_name }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% include 'mainpage/paginator.html' %}
+{% endblock %}

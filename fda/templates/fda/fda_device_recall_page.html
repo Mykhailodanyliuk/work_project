@@ -1,0 +1,29 @@
+{% extends 'mainpage/base.html' %}
+
+{% block title %} Device Recall {% endblock %}
+{% block content %}
+    <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Main page</a>
+        </div>
+    </nav>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>CSREF ID</th>
+            <th>Event Number</th>
+            <th>Recalling Firm</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for obj in context_data %}
+            <tr>
+                <td><a href="{% url 'fda_device_recall_data' obj.id %}">{{ obj.cfres_id }}</a></td>
+                <td>{{ obj.res_event_number }}</td>
+                <td>{{ obj.recalling_firm }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% include 'mainpage/paginator.html' %}
+{% endblock %}

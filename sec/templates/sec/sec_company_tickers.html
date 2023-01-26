@@ -1,102 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-    <title>Companies data</title>
-</head>
-<body>
-<nav class="navbar navbar-expand-lg bg-light">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="/">Main page</a>
-    </div>
-{#    <div class="collapse navbar-collapse" id="navbarSupportedContent">#}
-{#        <form action="/sec_company_tickers_search" class="form-inline my-2 my-lg-0", method="get">#}
-{#            <input class="form-control mr-sm-2" type="search" placeholder="Enter CIK" aria-label="Search", name="cik">#}
-{#            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>#}
-{#        </form>#}
-{##}
-{#    </div>#}
+{% extends 'mainpage/base.html' %}
 
-</nav>
-<a>Updated: {{ updated_time }}</a><br>
-<a>New companies: {{ count_new_companies }}</a><br>
-<a>The parser is updated: every 12 hours</a><br>
-<a>Count records: {{ count_records }}</a>
-
-<br>
-<form action="/sec/sec_company_tickers_search" , method="get">
-    <div class="input-group">
-        <div class="col-xs-3">
-            <input class="form-control mr-sm-2" type="search" placeholder="Enter CIK" aria-label="Search" , name="cik">
+{% block title %} Companies data {% endblock %}
+{% block content %}
+    <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Main page</a>
         </div>
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </div>
-</form>
-<br>
 
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        <th>Conmapy name</th>
-        <th>CIK number</th>
-        <th>Ticker</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for company in companies %}
+    </nav>
+
+    {% include 'mainpage/counter.html' %}
+
+    <br>
+    <form action="/sec/sec_company_tickers_search" , method="get">
+        <div class="input-group">
+            <div class="col-xs-3">
+                <input class="form-control mr-sm-2" type="search" placeholder="Enter CIK" aria-label="Search" ,
+                       name="cik">
+            </div>
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </div>
+    </form>
+    <br>
+
+    <table class="table table-bordered">
+        <thead>
         <tr>
-            <td>{{ company.title }}</td>
-            <td>{{ company.cik_str }}</td>
-            <td>{{ company.ticker }}</td>
+            <th>Conmapy name</th>
+            <th>CIK number</th>
+            <th>Ticker</th>
         </tr>
-    {% endfor %}
-    </tbody>
-</table>
-
-<nav aria-label="Page navigation example">
-    <ul class="pagination justify-content-center">
-        {% if companies.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ companies.previous_page_number }}">Previous</a>
-            </li>
-        {% else %}
-            <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Previous</a>
-            </li>
-        {% endif %}
-
-        {% if companies.number|add:'-4' > 1 %}
-            <li class="page-item"><a class="page-link" href="?page={{ companies.number|add:'-5' }}">&hellip;</a></li>
-        {% endif %}
-
-        {% for i in companies.paginator.page_range %}
-            {% if companies.number == i %}
-                <li class="page-item active" aria-current="page">
-          <span class="page-link">
-            {{ i }}
-          </span>
-                </li>
-            {% elif i > companies.number|add:'-5' and i < companies.number|add:'5' %}
-                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
-            {% endif %}
+        </thead>
+        <tbody>
+        {% for company in companies %}
+            <tr>
+                <td>{{ company.title }}</td>
+                <td>{{ company.cik_str }}</td>
+                <td>{{ company.ticker }}</td>
+            </tr>
         {% endfor %}
+        </tbody>
+    </table>
 
-        {% if companies.paginator.num_pages > companies.number|add:'4' %}
-            <li class="page-item"><a class="page-link" href="?page={{ companies.number|add:'5' }}">&hellip;</a></li>
-        {% endif %}
+    {% include 'mainpage/paginator.html' %}
 
-        {% if companies.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ companies.next_page_number }}">Next</a>
-            </li>
-        {% else %}
-            <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Next</a>
-            </li>
-        {% endif %}
-    </ul>
-</nav>
-</body>
-</html>
+{% endblock %}
