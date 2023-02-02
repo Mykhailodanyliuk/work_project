@@ -7,6 +7,18 @@
             <a class="navbar-brand" href="/">Main page</a>
         </div>
     </nav>
+    <div class="dropdown">
+        <a class="btn btn" href="#" role="button" id="dropdownMenuLink"
+           data-bs-toggle="dropdown" aria-expanded="false">
+            Order by
+        </a>
+
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <li><a class="dropdown-item" href="?order_by=registration_number">Registration Number</a></li>
+            <li><a class="dropdown-item" href="?order_by=fei_number">Fei Number</a></li>
+            <li><a class="dropdown-item" href="?order_by=name">Name</a></li>
+        </ul>
+    </div>
     <table class="table table-bordered">
         <thead>
         <tr>

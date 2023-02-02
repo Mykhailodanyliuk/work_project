@@ -24,6 +24,7 @@ urlpatterns = [
     path('sec/', include('sec.urls')),
     path('hhs/', include('hhs.urls')),
     path('fda/', include('fda.urls')),
+    path('uspto/', include('uspto.urls')),
 
 
 ]

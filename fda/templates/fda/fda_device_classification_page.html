@@ -7,6 +7,18 @@
             <a class="navbar-brand" href="/">Main page</a>
         </div>
     </nav>
+    <div class="dropdown">
+        <a class="btn btn" href="#" role="button" id="dropdownMenuLink"
+           data-bs-toggle="dropdown" aria-expanded="false">
+            Order by
+        </a>
+
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <li><a class="dropdown-item" href="?order_by=device_name">Device Model</a></li>
+            <li><a class="dropdown-item" href="?order_by=medical_specialty_description">Medical Specialty Description</a></li>
+            <li><a class="dropdown-item" href="?order_by=regulation_number">Regulation Number</a></li>
+        </ul>
+    </div>
     <table class="table table-bordered">
         <thead>
         <tr>

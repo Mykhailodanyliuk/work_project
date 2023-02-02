@@ -2,9 +2,9 @@ from django.db import models
 
 
 class DeviceEvent(models.Model):
-    generic_name = models.CharField(max_length=128)
-    brand_name = models.CharField(max_length=128)
-    udi_di = models.CharField(max_length=30)
+    report_number = models.CharField(max_length=128)
+    mdr_report_key = models.CharField(max_length=64)
+    pma_pmn_number = models.CharField(max_length=64)
     data = models.JSONField()
     upload_at = models.DateTimeField(auto_now=True)
 
@@ -12,13 +12,15 @@ class DeviceEvent(models.Model):
 class Device(models.Model):
     name = models.TextField()
     k_number = models.CharField(max_length=128)
-    data_json = models.JSONField()
+    applicant = models.CharField(max_length=255)
+    data = models.JSONField()
     upload_at = models.DateTimeField(auto_now=True)
 
 
 class DeviceEnforcement(models.Model):
     event_id = models.CharField(max_length=128)
     recalling_firm = models.CharField(max_length=128)
+    recall_number = models.CharField(max_length=128)
     data = models.JSONField()
     upload_at = models.DateTimeField(auto_now=True)
 
@@ -76,6 +78,7 @@ class DeviceUDI(models.Model):
 class DrugEnforcement(models.Model):
     event_id = models.CharField(max_length=64)
     recalling_firm = models.CharField(max_length=255)
+    recall_number = models.CharField(max_length=128)
     data = models.JSONField()
     upload_at = models.DateTimeField(auto_now=True)
 
@@ -97,11 +100,28 @@ class DrugNDC(models.Model):
 class FoodEnforcement(models.Model):
     event_id = models.CharField(max_length=64)
     recalling_firm = models.CharField(max_length=255)
+    recall_number = models.CharField(max_length=128)
     data = models.JSONField()
     upload_at = models.DateTimeField(auto_now=True)
 
 
 class FoodEvent(models.Model):
     report_number = models.CharField(max_length=64)
+    data = models.JSONField()
+    upload_at = models.DateTimeField(auto_now=True)
+
+
+class OtherNSDE(models.Model):
+    proprietary_name = models.CharField(max_length=255)
+    application_number_or_citation = models.CharField(max_length=64)
+    package_ndc11 = models.CharField(max_length=64)
+    data = models.JSONField()
+    upload_at = models.DateTimeField(auto_now=True)
+
+
+class OtherSubstance(models.Model):
+    proprietary_name = models.CharField(max_length=255)
+    application_number_or_citation = models.CharField(max_length=64)
+    package_ndc11 = models.CharField(max_length=64)
     data = models.JSONField()
     upload_at = models.DateTimeField(auto_now=True)

@@ -1,6 +1,6 @@
 {% extends 'mainpage/base.html' %}
 
-{% block title %} Device Recall {% endblock %}
+{% block title %} USPTO {% endblock %}
 {% block content %}
     <nav class="navbar navbar-expand-lg bg-light">
         <div class="container-fluid">
@@ -12,26 +12,24 @@
            data-bs-toggle="dropdown" aria-expanded="false">
             Order by
         </a>
+
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <li><a class="dropdown-item" href="?order_by=cfres_id">CSREF ID</a></li>
-            <li><a class="dropdown-item" href="?order_by=res_event_number">Event Number</a></li>
-            <li><a class="dropdown-item" href="?order_by=recalling_firm">Recalling Firm</a></li>
+            <li><a class="dropdown-item" href="?order_by=patent_application_number">Patent Application Number</a></li>
+            <li><a class="dropdown-item" href="?order_by=invention_title">Invention Title</a></li>
         </ul>
     </div>
     <table class="table table-bordered">
         <thead>
         <tr>
-            <th>CSREF ID</th>
-            <th>Event Number</th>
-            <th>Recalling Firm</th>
+            <th>Patent Application Number</th>
+            <th>Invention Title</th>
         </tr>
         </thead>
         <tbody>
         {% for obj in context_data %}
             <tr>
-                <td><a href="{% url 'fda_device_recall_data' obj.id %}">{{ obj.cfres_id }}</a></td>
-                <td>{{ obj.res_event_number }}</td>
-                <td>{{ obj.recalling_firm }}</td>
+                <td><a href="{% url 'uspto_patent_data' obj.id %}">{{ obj.patent_application_number }}</a></td>
+                <td>{{ obj.invention_title }}</td>
             </tr>
         {% endfor %}
         </tbody>

@@ -7,20 +7,31 @@
             <a class="navbar-brand" href="/">Main page</a>
         </div>
     </nav>
+    <div class="dropdown">
+        <a class="btn btn" href="#" role="button" id="dropdownMenuLink"
+           data-bs-toggle="dropdown" aria-expanded="false">
+            Order by
+        </a>
+
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <li><a class="dropdown-item" href="?order_by=report_number">Report Number</a><br></li>
+            <li><a class="dropdown-item" href="?order_by=mdr_report_key">MDR Report Key</a></li>
+        </ul>
+    </div>
     <table class="table table-bordered">
         <thead>
         <tr>
-            <th>Generic Name</th>
-            <th>Brand Name</th>
-            <th>Udi di</th>
+            <th>Report Number</th>
+            <th>MDR Report Key</th>
+            <th>PMA PMN Number</th>
         </tr>
         </thead>
         <tbody>
         {% for event in context_data %}
             <tr>
-                <td><a href="{% url 'fda_device_event_data' event.id %}">{{ event.generic_name }}</a></td>
-                <td>{{ event.brand_name }}</td>
-                <td>{{ event.udi_di }}</td>
+                <td><a href="{% url 'fda_device_event_data' event.id %}">{{ event.report_number }}</a></td>
+                <td>{{ event.mdr_report_key }}</td>
+                <td>{{ event.pma_pmn_number }}</td>
             </tr>
         {% endfor %}
         </tbody>

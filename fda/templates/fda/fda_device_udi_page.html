@@ -7,6 +7,18 @@
             <a class="navbar-brand" href="/">Main page</a>
         </div>
     </nav>
+    <div class="dropdown">
+        <a class="btn btn" href="#" role="button" id="dropdownMenuLink"
+           data-bs-toggle="dropdown" aria-expanded="false">
+            Order by
+        </a>
+
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <li><a class="dropdown-item" href="?order_by=public_device_record_key">Public Device Record Key</a></li>
+            <li><a class="dropdown-item" href="?order_by=device_description">Device Description</a></li>
+            <li><a class="dropdown-item" href="?order_by=brand_name">Brand Name</a></li>
+        </ul>
+    </div>
     <table class="table table-bordered">
         <thead>
         <tr>

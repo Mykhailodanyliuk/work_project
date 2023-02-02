@@ -7,9 +7,22 @@
             <a class="navbar-brand" href="/">Main page</a>
         </div>
     </nav>
+    <div class="dropdown">
+        <a class="btn btn" href="#" role="button" id="dropdownMenuLink"
+           data-bs-toggle="dropdown" aria-expanded="false">
+            Order by
+        </a>
+
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <li><a class="dropdown-item" href="?order_by=recall_number">Recall Number</a></li>
+            <li><a class="dropdown-item" href="?order_by=event_id">Event ID</a></li>
+            <li><a class="dropdown-item" href="?order_by=recalling_firm">Recalling Firm</a></li>
+        </ul>
+    </div>
     <table class="table table-bordered">
         <thead>
         <tr>
+            <th>Recall Number</th>
             <th>Event ID</th>
             <th>Recalling Firm</th>
         </tr>
@@ -17,7 +30,8 @@
         <tbody>
         {% for obj in context_data %}
             <tr>
-                <td><a href="{% url 'fda_food_enforcement_data' obj.id %}">{{ obj.event_id }}</a></td>
+                <td><a href="{% url 'fda_food_enforcement_data' obj.id %}">{{ obj.recall_number }}</a></td>
+                <td>{{ obj.event_id }}</td>
                 <td>{{ obj.recalling_firm }}</td>
             </tr>
         {% endfor %}

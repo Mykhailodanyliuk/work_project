@@ -7,6 +7,19 @@
             <a class="navbar-brand" href="/">Main page</a>
         </div>
     </nav>
+    <div class="dropdown">
+        <a class="btn btn" href="#" role="button" id="dropdownMenuLink"
+           data-bs-toggle="dropdown" aria-expanded="false">
+            Order by
+        </a>
+
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <li><a class="dropdown-item" href="?order_by=sample_id">Sample ID</a></li>
+            <li><a class="dropdown-item" href="?order_by=lot_number">Lot Number</a></li>
+            <li><a class="dropdown-item" href="?order_by=device">Device</a></li>
+            <li><a class="dropdown-item" href="?order_by=manufacturer">Manufacturer</a></li>
+        </ul>
+    </div>
     <table class="table table-bordered">
         <thead>
         <tr>
