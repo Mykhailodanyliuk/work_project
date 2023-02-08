@@ -1,166 +1,167 @@
 {% extends 'mainpage/base.html' %}
 
+
 {% block title %} Company data {% endblock %}
 {% block content %}
-<nav class="navbar navbar-expand-lg bg-light">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="/">Main page</a>
-    </div>
-</nav>
-<table class="table table-bordered">
-    <td>
-        {% for key, value in dataset.items %}
-        {% if key == 'addresses' %}
-        <tr>
-            <td>{{ key }}</td>
-
-            <td>
-                <table class="table table-bordered">
+    <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Main page</a>
+        </div>
+    </nav>
+    <table class="table table-bordered">
+        <td>
+            {% for key, value in dataset.items %}
+                {% if key == 'addresses' %}
                     <tr>
-                        <td>Mailing:</td>
+                        <td>{{ key }}</td>
+
                         <td>
                             <table class="table table-bordered">
-                                {% for data_key, data_value in value.mailing.items %}
                                 <tr>
-                                    <td>{{ data_key }}</td>
-                                    <td>{{ data_value }}</td>
+                                    <td>Mailing:</td>
+                                    <td>
+                                        <table class="table table-bordered">
+                                            {% for data_key, data_value in value.mailing.items %}
+                                                <tr>
+                                                    <td>{{ data_key }}</td>
+                                                    <td>{{ data_value }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                    </td>
                                 </tr>
+                                <tr>
+                                    <td>Business:</td>
+                                    <td>
+                                        <table class="table table-bordered">
+                                            {% for data_key, data_value in value.business.items %}
+                                                <tr>
+                                                    <td>{{ data_key }}</td>
+                                                    <td>{{ data_value }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                    </td>
+                                </tr>
+
+                            </table>
+                        </td>
+                    </tr>
+
+                {% elif key == 'filings' %}
+                    <tr>
+                        <td>{{ key }}</td>
+                        <td>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <td>Recent:</td>
+                                    <td>
+                                        <table class="table table-bordered">
+                                            {% for key, value in filings_recent %}
+                                                <tr>
+                                                    <td>{{ key }}</td>
+                                                    <td>{{ value }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Files:</td>
+                                    <td>
+                                        {% for data in value.files %}
+                                            <table>
+                                                <tr>
+                                                    <td>{{ data }}</td>
+                                                </tr>
+                                            </table>
+                                        {% endfor %}
+                                    </td>
+                                    <td>{{ value.files }}</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                {% elif key == 'formerNames' %}
+                    <tr>
+                        <td>Former Names</td>
+                        <td>
+                            <table class="table table-bordered">
+                                {% for data in value %}
+                                    <tr>
+                                        <td> name</td>
+                                        <td>{{ data.name }}</td>
+                                        <td>from</td>
+                                        <td>{{ data.from }}</td>
+                                        <td>to</td>
+                                        <td>{{ data.to }}</td>
+                                    </tr>
                                 {% endfor %}
                             </table>
                         </td>
                     </tr>
                     <tr>
-                        <td>Business:</td>
+                        <td>Fillings table</td>
                         <td>
-                            <table class="table table-bordered">
-                                {% for data_key, data_value in value.business.items %}
+                            <table class="table table-striped table-bordered">
+                                <thead>
                                 <tr>
-                                    <td>{{ data_key }}</td>
-                                    <td>{{ data_value }}</td>
+                                    <th>Link</th>
+                                    <th>Accession Number</th>
+                                    <th>FilingDate</th>
+                                    <th>ReportDate</th>
+                                    <th>AcceptanceDateTime</th>
+                                    <th>Act</th>
+                                    <th>Form</th>
+                                    <th>FileNumber</th>
+                                    <th>FilmNumber</th>
+                                    <th>Items</th>
+                                    <th>Size</th>
+                                    <th>IsXBRL</th>
+                                    <th>IsInlineXBRL</th>
+                                    <th>PrimaryDocument</th>
+                                    <th>PrimaryDocDescription</th>
                                 </tr>
+                                {% for item in fillings_all_data %}
+                                    <tr>
+                                        {% for i in item %}
+                                            {% if forloop.counter == 1 %}
+                                                <td><a href="{{ i }}">{{ i }}</a></td>
+                                            {% else %}
+                                                <td>{{ i }}</td>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tr>
                                 {% endfor %}
+                                </thead>
+
                             </table>
                         </td>
                     </tr>
-
-                </table>
-            </td>
-        </tr>
-
-        {% elif key == 'filings' %}
-        <tr>
-            <td>{{ key }}</td>
-            <td>
-                <table class="table table-bordered">
+                {% elif key == 'tickers' %}
                     <tr>
-                        <td>Recent:</td>
-                        <td>
-                            <table class="table table-bordered">
-                                {% for key, value in filings_recent %}
-                                <tr>
-                                    <td>{{ key }}</td>
-                                    <td>{{ value }}</td>
-                                </tr>
-                                {% endfor %}
-                            </table>
-                        </td>
+                        <td>{{ key }}</td>
+                        <td>{{ value|join:", " }}</td>
                     </tr>
+                {% elif key == 'ein' %}
                     <tr>
-                        <td>Files:</td>
-                        <td>
-                            {% for data in value.files %}
-                            <table>
-                                <tr>
-                                    <td>{{ data }}</td>
-                                </tr>
-                            </table>
-                            {% endfor %}
-                        </td>
-                        <td>{{ value.files }}</td>
+                        <td>ein/irs</td>
+                        <td>{{ value }}</td>
                     </tr>
-                </table>
-            </td>
-        </tr>
-        {% elif key == 'formerNames' %}
-        <tr>
-            <td>Former Names</td>
-            <td>
-                <table class="table table-bordered">
-                    {% for data in value %}
+                {% elif key == 'exchanges' %}
                     <tr>
-                        <td> name</td>
-                        <td>{{ data.name }}</td>
-                        <td>from</td>
-                        <td>{{ data.from }}</td>
-                        <td>to</td>
-                        <td>{{ data.to }}</td>
+                        <td>{{ key }}</td>
+                        <td>{{ value|join:", " }}</td>
                     </tr>
-                    {% endfor %}
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td>Fillings table</td>
-            <td>
-<!--                {% for link in links %}-->
-<!--                <a href="{{ link }}">{{ link }}</a>-->
-<!--                {% endfor %}-->
-                <table class="table table-striped table-bordered">
-                    <thead>
+                {% else %}
                     <tr>
-                        <th>Link</th>
-                        <th>Accession Number</th>
-                        <th>FilingDate</th>
-                        <th>ReportDate</th>
-                        <th>AcceptanceDateTime</th>
-                        <th>Act</th>
-                        <th>Form</th>
-                        <th>FileNumber</th>
-                        <th>FilmNumber</th>
-                        <th>Items</th>
-                        <th>Size</th>
-                        <th>IsXBRL</th>
-                        <th>IsInlineXBRL</th>
-                        <th>PrimaryDocument</th>
-                        <th>PrimaryDocDescription</th>
+                        <td>{{ key }}</td>
+                        <td>{{ value }}</td>
                     </tr>
-                    {% for item in fillings_all_data%}
-                    <tr>
-                        {% for i in item %}
-                        <td>{{i}}</td>
-                        {% endfor %}
-                    </tr>
-                    {% endfor %}
-                    </thead>
-
-                </table>
-            </td>
-        </tr>
-        {% elif key == 'tickers' %}
-        <tr>
-            <td>{{ key }}</td>
-            <td>{{ value|join:", " }}</td>
-        </tr>
-        {% elif key == 'ein' %}
-        <tr>
-            <td>ein/irs</td>
-            <td>{{ value }}</td>
-        </tr>
-        {% elif key == 'exchanges' %}
-        <tr>
-            <td>{{ key }}</td>
-            <td>{{ value|join:", " }}</td>
-        </tr>
-        {% else %}
-        <tr>
-            <td>{{ key }}</td>
-            <td>{{ value }}</td>
-        </tr>
-        {% endif %}
-        {% endfor %}
+                {% endif %}
+            {% endfor %}
 
 
-
-</table>
+    </table>
 
 {% endblock %}

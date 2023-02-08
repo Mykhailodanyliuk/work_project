@@ -26,17 +26,17 @@
     <table class="table table-bordered">
         <thead>
         <tr>
-            <th>Conmapy name</th>
+            <th>Company name</th>
             <th>CIK number</th>
-            <th>Ticker</th>
+            <th>Tickers</th>
         </tr>
         </thead>
         <tbody>
         {% for company in companies %}
             <tr>
                 <td>{{ company.title }}</td>
-                <td>{{ company.cik_str }}</td>
-                <td>{{ company.ticker }}</td>
+                <td>{{ company.cik_str|stringformat:"010d" }}</td>
+                <td class="col-sm-2">{{ company.tickers|join:", " }}</td>
             </tr>
         {% endfor %}
         </tbody>

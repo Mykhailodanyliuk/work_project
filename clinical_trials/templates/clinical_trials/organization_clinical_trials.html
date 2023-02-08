@@ -10,7 +10,7 @@
     <h3>{{ dataset.organization }}</h3>
     <table class="table table-bordered">
         <tbody>
-        {% for trial in dataset.NCTId %}
+        {% for trial in dataset.nct_ids %}
             <tr>
                 <td><a href="{% url 'clinical_trial' trial %}">{{ trial }}</a></td>
             </tr>

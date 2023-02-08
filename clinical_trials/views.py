@@ -35,10 +35,10 @@ def display_clinical_trial(request, trial_id):
 
 
 def clinical_trials_organization_search(request):
-    npi = request.GET['organization']
+    organization = request.GET['organization']
     dataset = [[organization.get('organization').replace(' ', '_'), organization.get('organization')]
                for organization in
-               clinical_trial_organizations_collection.find({'organization': {'$regex': npi}},
+               clinical_trial_organizations_collection.find({'organization': {'$regex': organization}},
                                                             {'_id': 0, 'organization': 1})]
     return render(request, 'clinical_trials/clinical_trials_organization_search.html',
                   {'dataset': dataset, 'paginator': dataset})
