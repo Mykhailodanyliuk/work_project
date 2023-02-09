@@ -29,14 +29,16 @@
             <th>Company name</th>
             <th>CIK number</th>
             <th>Tickers</th>
+            <th>Date added</th>
         </tr>
         </thead>
         <tbody>
         {% for company in companies %}
             <tr>
                 <td>{{ company.title }}</td>
-                <td>{{ company.cik_str|stringformat:"010d" }}</td>
+                <td>{{ company.cik_str }}</td>
                 <td class="col-sm-2">{{ company.tickers|join:", " }}</td>
+                <td>{{ company.upload_at }}</td>
             </tr>
         {% endfor %}
         </tbody>

@@ -2,18 +2,16 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render
 from mainpage import parsers
 
-
 companies_data_collection = parsers.get_collection_from_db('db', 'sec_data')
+
+
 # count_companies_data = companies_data_collection.count_documents({})
-
-
-
 
 
 def sec_company_fillings(request):
     update_collection = parsers.get_collection_from_db('db', 'update_collection')
-    last_len_records = update_collection.find_one({'name': 'sec'}).get('total_records') if update_collection.find_one(
-        {'name': 'sec'}) else 0
+    counter_data = parsers.get_collection_from_db('db', 'update_collection').find_one({'name': 'sec'})
+    last_len_records = counter_data.get('total_records') if counter_data else 1
 
     order_by = request.GET.get('order_by')
     page = request.GET.get('page', 1)
@@ -30,24 +28,12 @@ def sec_company_fillings(request):
         'has_next': has_next,
         'next_page_number': next_page_number}
 
-    companies = companies_data_collection.find({}, {'_id': 0, 'name': 1, 'cik': 1, 'ein': 1}).sort('name').skip(
+    companies = companies_data_collection.find({}, {'_id': 0, 'name': 1, 'cik': 1, 'ein': 1, 'upload_date':1}).sort('name').skip(
         500 * (number - 1)).limit(500)
 
     if order_by == 'cik':
-        companies = companies_data_collection.find({}, {'_id': 0, 'name': 1, 'cik': 1, 'ein': 1}).sort('cik').skip(
+        companies = companies_data_collection.find({}, {'_id': 0, 'name': 1, 'cik': 1, 'ein': 1,'upload_date':1}).sort('cik').skip(
             500 * (number - 1)).limit(500)
-    # companies = companies_data_collection.find().skip(500 * (number - 1)).limit(500)
-    # updated_time = parsers.get_collection_from_db('db', 'update_collection').find_one({'name': 'last_update'}).get(
-    #     'update_time')
-    # count_new_records = parsers.get_collection_from_db('db', 'update_collection').find_one(
-    #     {'name': 'new_companies'}).get(
-    #     'count_new_companies')
-    # count_records = companies_data_collection.count_documents({})
-    updated_time = update_collection.find_one({'name': 'sec'}).get('update_date')
-    count_new_records = update_collection.find_one({'name': 'sec'}).get('new_records')
-    count_records = last_len_records
-    counter_data = {'updated_time': updated_time, 'count_new_records': count_new_records, 'renewal_period': '',
-                    'count_records': count_records}
     return render(request, 'sec/sec_company_fillings.html',
                   {'paginator': dataset1, 'companies': companies, 'counter_data': counter_data, 'order_by': order_by})
 
@@ -86,14 +72,7 @@ def sec_company_tickers(request):
         companies = paginator.page(1)
     except EmptyPage:
         companies = paginator.page(paginator.num_pages)
-    updated_time = parsers.get_collection_from_db('db', 'update_collection').find_one({'name': 'last_update'}).get(
-        'update_time')
-    count_new_records = parsers.get_collection_from_db('db', 'update_collection').find_one(
-        {'name': 'new_companies'}).get(
-        'count_new_companies')
-    count_records = companies_collection.count_documents({})
-    counter_data = {'updated_time': updated_time, 'count_new_records': count_new_records, 'renewal_period': '',
-                    'count_records': count_records}
+    counter_data = parsers.get_collection_from_db('db', 'update_collection').find_one({'name': 'sec_tickers'})
     return render(request, 'sec/sec_company_tickers.html',
                   {'companies': companies, 'counter_data': counter_data, 'paginator': companies})
 

@@ -10,25 +10,23 @@
             <a class="navbar-brand" href="/">Main page</a>
         </div>
     </nav>
+    {% include 'mainpage/counter.html' %}
     <table class="table table-bordered">
         <thead>
         <tr>
             <th>NPI</th>
             <th>First Name</th>
             <th>Last Name</th>
+            <th>Date added</th>
         </tr>
         </thead>
         <tbody>
         {% for data in dataset %}
             <tr>
-                {% for key, value in data.items %}
-                    {% if key == '_id' %}
-                    {% elif key == 'NPI' %}
-                        <td><a href="{% url 'individual_npi' value %}">{{ value }}</a></td>
-                    {% else %}
-                        <td>{{ value }}</td>
-                    {% endif %}
-                {% endfor %}
+                <td><a href="{% url 'individual_npi' data.npi %}">{{ data.npi }}</a></td>
+                <td>{{ data.data.provider_first_name }}</td>
+                <td>{{ data.data.provider_last_name__legal_name_ }}</td>
+                <td>{{ data.upload_at }}</td>
             </tr>
 
         {% endfor %}

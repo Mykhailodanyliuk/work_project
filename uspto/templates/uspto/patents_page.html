@@ -23,6 +23,7 @@
         <tr>
             <th>Patent Application Number</th>
             <th>Invention Title</th>
+            <th>Date added</th>
         </tr>
         </thead>
         <tbody>
@@ -30,6 +31,7 @@
             <tr>
                 <td><a href="{% url 'uspto_patent_data' obj.id %}">{{ obj.patent_application_number }}</a></td>
                 <td>{{ obj.invention_title }}</td>
+                <td>{{ obj.upload_at }}</td>
             </tr>
         {% endfor %}
         </tbody>

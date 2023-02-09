@@ -34,6 +34,7 @@
             <th>Company name</th>
             <th>CIK</th>
             <th>EIN/IRS</th>
+            <th>Date added</th>
         </tr>
         </thead>
         <tbody>
@@ -41,9 +42,12 @@
             <tr>
                 <td><a href="/sec/sec_company_fillings/{{ company.cik }}"> {{ company.name }}</a></td>
                 <td>{{ company.cik }}</td>
-                {% if company.ein and company.ein != '000000000' %}
-                    <td>{{ company.ein }}</td>
-                {% endif %}
+                <td>
+                    {% if company.ein and company.ein != '000000000' %}
+                        {{ company.ein }}
+                    {% endif %}
+                </td>
+                <td>{{ company.upload_date }}</td>
             </tr>
         {% endfor %}
         </tbody>
