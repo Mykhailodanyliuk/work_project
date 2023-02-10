@@ -2,18 +2,15 @@ from django.shortcuts import render
 from mainpage import parsers
 from mainpage.views import mongo_paginator
 
-mycollection = parsers.get_collection_from_db('db', 'nppes_data')
-npees_data_collection = parsers.get_collection_from_db('db', 'nppes_data')
-nppes_data_individual_collection = parsers.get_collection_from_db('db', 'nppes_data_individual')
-nppes_data_entities_collection = parsers.get_collection_from_db('db', 'nppes_data_entities')
-count_nppes_data_individual = nppes_data_individual_collection.count_documents({})
-count_nppes_data_entities = nppes_data_entities_collection.count_documents({})
 
 def hhs_page(request):
     return render(request, 'hhs/nppes_list_data.html')
 
 
 def hhs_data_page(request, npi_id):
+    nppes_data_entities_collection = parsers.get_collection_from_db('db', 'nppes_data_entities')
+    nppes_data_individual_collection = parsers.get_collection_from_db('db', 'nppes_data_individual')
+    update_collection = parsers.get_collection_from_db('db', 'update_collection')
     col = parsers.get_collection_from_db('db', 'nppes_data')
     nppes_npi_data = col.find_one({'npi': str(npi_id)})
     if nppes_data_individual_collection.find_one({'npi': str(npi_id)}):
@@ -25,21 +22,35 @@ def hhs_data_page(request, npi_id):
 
 
 def display_hhs_data_individual(request):
-    paginator = mongo_paginator(request, count_nppes_data_individual)
+    nppes_data_individual_collection = parsers.get_collection_from_db('db', 'nppes_data_individual')
+    update_collection = parsers.get_collection_from_db('db', 'update_collection')
+    counter_data = update_collection.find_one({'name': 'hhs_individuals'})
+    collection_count_documents = counter_data.get('total_records') if counter_data else 1
+    paginator = mongo_paginator(request, collection_count_documents, 500)
     part_npi = nppes_data_individual_collection.find().skip(500 * (int(request.GET.get('page', 1)) - 1)).limit(500)
-    counter_data = parsers.get_collection_from_db('db', 'update_collection').find_one({'name': 'hhs_individuals'})
-    return render(request, 'hhs/nppes_individual.html', context={'dataset': part_npi, 'paginator': paginator, 'counter_data':counter_data})
+    return render(request, 'hhs/nppes_individual.html',
+                  context={'dataset': part_npi, 'paginator': paginator, 'counter_data': counter_data})
 
 
 def display_hhs_data_entities(request):
-    paginator = mongo_paginator(request, count_nppes_data_entities)
+    nppes_data_entities_collection = parsers.get_collection_from_db('db', 'nppes_data_entities')
+    update_collection = parsers.get_collection_from_db('db', 'update_collection')
+    counter_data = update_collection.find_one({'name': 'hhs_entities'})
+    collection_count_documents = counter_data.get('total_records') if counter_data else 1
+    paginator = mongo_paginator(request, collection_count_documents, 500)
     part_npi = nppes_data_entities_collection.find().skip(500 * (int(request.GET.get('page', 1)) - 1)).limit(500)
-    counter_data = parsers.get_collection_from_db('db', 'update_collection').find_one({'name': 'hhs_entities'})
-    return render(request, 'hhs/nppes_entities.html', context={'dataset': part_npi, 'paginator': paginator, 'counter_data':counter_data})
+    return render(request, 'hhs/nppes_entities.html',
+                  context={'dataset': part_npi, 'paginator': paginator, 'counter_data': counter_data})
 
 
 def hhs_data_search(request):
+    nppes_data_entities_collection = parsers.get_collection_from_db('db', 'nppes_data_entities')
+    nppes_data_individual_collection = parsers.get_collection_from_db('db', 'nppes_data_individual')
     print(request.GET)
     NPI = request.GET['NPI']
-    companies = list(npees_data_collection.find({'NPI': {'$regex': NPI}}))
+    companies = list(
+        nppes_data_entities_collection.find({'npi': {'$regex': NPI}}, {'_id': 0, 'npi': 1, 'upload_at': 1}))
+    companies.extend(
+        list(nppes_data_individual_collection.find({'npi': {'$regex': NPI}}, {'_id': 0, 'npi': 1, 'upload_at': 1})))
+    print(companies)
     return render(request, 'hhs/nppes_data_search.html', {'dataset': companies})

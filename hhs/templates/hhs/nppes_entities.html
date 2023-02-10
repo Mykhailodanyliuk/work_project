@@ -22,7 +22,7 @@
         <tbody>
         {% for data in dataset %}
             <tr>
-                <td><a href="{% url 'individual_npi' data.npi %}">{{ data.npi }}</a></td>
+                <td><a href="{% url 'hhs_data' data.npi %}">{{ data.npi }}</a></td>
                 <td>{{ data.data.provider_organization_name__legal_business_name_ }}</td>
                 <td>{{ data.upload_at }}</td>
             </tr>

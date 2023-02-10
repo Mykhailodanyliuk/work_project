@@ -44,9 +44,9 @@ def npi_data_search(request):
                   {'npi_data': companies})
 
 
-def mongo_paginator(request, count_docs):
+def mongo_paginator(request, count_docs, per_page):
     page = request.GET.get('page', 1)
-    num_pages = count_docs // 500 + 1
+    num_pages = count_docs // per_page + 1
     page_range = range(1, num_pages + 1)
     has_previous = True if int(page) > 1 else False
     number = int(page)

@@ -1,53 +1,33 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render
 from mainpage import parsers
-
-companies_data_collection = parsers.get_collection_from_db('db', 'sec_data')
-
-
-# count_companies_data = companies_data_collection.count_documents({})
+from mainpage.views import mongo_paginator
 
 
 def sec_company_fillings(request):
+    companies_data_collection = parsers.get_collection_from_db('db', 'sec_data')
     update_collection = parsers.get_collection_from_db('db', 'update_collection')
-    counter_data = parsers.get_collection_from_db('db', 'update_collection').find_one({'name': 'sec'})
-    last_len_records = counter_data.get('total_records') if counter_data else 1
-
-    order_by = request.GET.get('order_by')
-    page = request.GET.get('page', 1)
-    num_pages = last_len_records // 500 + 1
-    page_range = range(1, num_pages + 1)
-    has_previous = True if int(page) > 1 else False
-    number = int(page)
-    previous_page_number = number - 1
-    has_next = True if number < num_pages else False
-    next_page_number = number + 1
-    dataset1 = {
-        'paginator': {'num_pages': num_pages, 'page_range': page_range, 'previous_page_number': previous_page_number},
-        'has_previous': has_previous, 'number': number,
-        'has_next': has_next,
-        'next_page_number': next_page_number}
-
-    companies = companies_data_collection.find({}, {'_id': 0, 'name': 1, 'cik': 1, 'ein': 1, 'upload_date':1}).sort('name').skip(
-        500 * (number - 1)).limit(500)
-
+    counter_data = update_collection.find_one({'name': 'sec_data'})
+    collection_count_documents = counter_data.get('total_records') if counter_data else 1
+    order_by = request.GET.get('order_by') if (request.GET.get('order_by') is not None) else 'name'
+    page = int(request.GET.get('page', 1))
+    paginator = mongo_paginator(request, collection_count_documents, 500)
+    companies = companies_data_collection.find({}, {'_id': 0, 'name': 1, 'cik': 1, 'ein': 1, 'upload_date': 1}).sort(
+        'name').skip(500 * (page - 1)).limit(500)
     if order_by == 'cik':
-        companies = companies_data_collection.find({}, {'_id': 0, 'name': 1, 'cik': 1, 'ein': 1,'upload_date':1}).sort('cik').skip(
-            500 * (number - 1)).limit(500)
+        companies = companies_data_collection.find({},
+                                                   {'_id': 0, 'name': 1, 'cik': 1, 'ein': 1, 'upload_date': 1}).sort(
+            'cik').skip(500 * (page - 1)).limit(500)
     return render(request, 'sec/sec_company_fillings.html',
-                  {'paginator': dataset1, 'companies': companies, 'counter_data': counter_data, 'order_by': order_by})
+                  {'paginator': paginator, 'companies': companies, 'counter_data': counter_data, 'order_by': order_by})
 
 
 def display_sec_company_data(request, cik):
-    col = parsers.get_collection_from_db('db', 'sec_data')
-    company_data = col.find_one({'cik': cik}).get('data')
-    if not company_data:
-        company_data = col.find_one({'cik': cik.zfill(10)})
+    sec_data_fillings_collection = parsers.get_collection_from_db('db', 'sec_data')
+    company_data = sec_data_fillings_collection.find_one({'cik': cik}).get('data')
     filings_recent = company_data.get('filings').get('recent').items()
-    cik = cik.lstrip('0')
-    links = [f'https://www.sec.gov/Archives/edgar/data/{cik}/{i.replace("-", "")}/{i}-index.html' for i in
+    links = [f'https://www.sec.gov/Archives/edgar/data/{cik.lstrip("0")}/{i.replace("-", "")}/{i}-index.html' for i in
              company_data.get('filings').get('recent').get('accessionNumber')]
-
     filings_values = list(company_data.get('filings').get('recent').values())
     filings_values.insert(0, links)
     fillings_all_data = []
@@ -62,19 +42,21 @@ def display_sec_company_data(request, cik):
 
 
 def sec_company_tickers(request):
-    companies_data = parsers.get_all_data_from_collection('sec_data_tickers')
-    companies_collection = parsers.get_collection_from_db('db', 'sec_data_tickers')
-    page = request.GET.get('page', 1)
-    paginator = Paginator(companies_data, 500)
-    try:
-        companies = paginator.page(page)
-    except PageNotAnInteger:
-        companies = paginator.page(1)
-    except EmptyPage:
-        companies = paginator.page(paginator.num_pages)
-    counter_data = parsers.get_collection_from_db('db', 'update_collection').find_one({'name': 'sec_tickers'})
+    update_collection = parsers.get_collection_from_db('db', 'update_collection')
+    sec_data_tickers_collection = parsers.get_collection_from_db('db', 'sec_data_tickers')
+    counter_data = update_collection.find_one({'name': 'sec_tickers'})
+    collection_count_documents = counter_data.get('total_records') if counter_data else 1
+    order_by = request.GET.get('order_by') if (request.GET.get('order_by') is not None) else 'name'
+    page = int(request.GET.get('page', 1))
+    paginator = mongo_paginator(request, collection_count_documents, 500)
+    companies = sec_data_tickers_collection.find({}, {'_id': 0, 'title': 1, 'cik_str': 1, 'tickers': 1, 'upload_at': 1}).sort(
+        'name').skip(500 * (page - 1)).limit(500)
+    if order_by == 'cik':
+        companies = sec_data_tickers_collection.find({},
+                                                     {'_id': 0, 'title': 1, 'cik_str': 1, 'tickers': 1, 'upload_at': 1}).sort(
+            'cik').skip(500 * (page - 1)).limit(500)
     return render(request, 'sec/sec_company_tickers.html',
-                  {'companies': companies, 'counter_data': counter_data, 'paginator': companies})
+                  {'companies': companies, 'counter_data': counter_data, 'paginator': paginator})
 
 
 def sec_company_tickers_search(request):
@@ -86,6 +68,7 @@ def sec_company_tickers_search(request):
 
 
 def sec_company_fillings_search(request):
+    companies_data_collection = parsers.get_collection_from_db('db', 'sec_data')
     cik = request.GET['cik']
     companies = list(companies_data_collection.find({'cik': {'$regex': cik}}))
     return render(request, 'sec/sec_company_fillings_search.html',
