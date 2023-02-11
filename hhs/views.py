@@ -27,7 +27,7 @@ def display_hhs_data_individual(request):
     counter_data = update_collection.find_one({'name': 'hhs_individuals'})
     collection_count_documents = counter_data.get('total_records') if counter_data else 1
     paginator = mongo_paginator(request, collection_count_documents, 500)
-    part_npi = nppes_data_individual_collection.find().sort({'_id': 1}).skip(
+    part_npi = nppes_data_individual_collection.find().skip(
         500 * (int(request.GET.get('page', 1)) - 1)).limit(500)
     return render(request, 'hhs/nppes_individual.html',
                   context={'dataset': part_npi, 'paginator': paginator, 'counter_data': counter_data})
@@ -39,7 +39,7 @@ def display_hhs_data_entities(request):
     counter_data = update_collection.find_one({'name': 'hhs_entities'})
     collection_count_documents = counter_data.get('total_records') if counter_data else 1
     paginator = mongo_paginator(request, collection_count_documents, 500)
-    part_npi = nppes_data_entities_collection.find().sort({'_id': 1}).skip(
+    part_npi = nppes_data_entities_collection.find().skip(
         500 * (int(request.GET.get('page', 1)) - 1)).limit(500)
     return render(request, 'hhs/nppes_entities.html',
                   context={'dataset': part_npi, 'paginator': paginator, 'counter_data': counter_data})
