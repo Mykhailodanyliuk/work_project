@@ -1,13 +1,6 @@
 from django.shortcuts import render
 from . import parsers
 
-mycollection = parsers.get_collection_from_db('db', 'nppes_data')
-npees_data_collection = parsers.get_collection_from_db('db', 'nppes_data')
-nppes_data_individual_collection = parsers.get_collection_from_db('db', 'nppes_data_individual')
-nppes_data_entities_collection = parsers.get_collection_from_db('db', 'nppes_data_entities')
-count_nppes_data_individual = nppes_data_individual_collection.count_documents({})
-count_nppes_data_entities = nppes_data_entities_collection.count_documents({})
-
 
 def error_404(request, exception):
     return render(request, 'mainpage/404.html')
@@ -22,16 +15,11 @@ def index(request):
 
 
 def get_list_npi_data(request):
+    update_collection = parsers.get_collection_from_db('db', 'update_collection')
     npi_data_collection = parsers.get_collection_from_db('db', 'npi_data')
-    npi_data = parsers.get_all_data_from_collection('npi_data')
-    updated_time = parsers.get_collection_from_db('db', 'update_collection').find_one({'name': 'last_update'}).get(
-        'update_time')
-    count_new_records = parsers.get_collection_from_db('db', 'update_collection').find_one(
-        {'name': 'new_npis'}).get(
-        'count_new_npis')
-    count_records = npi_data_collection.count_documents({})
-    counter_data = {'updated_time': updated_time, 'count_new_records': count_new_records, 'renewal_period': '',
-                    'count_records': count_records}
+    counter_data = update_collection.find_one({'name': 'npi_data'})
+    collection_count_documents = counter_data.get('total_records') if counter_data else 1
+    npi_data = npi_data_collection.find({})
     return render(request, 'mainpage/npi_data.html',
                   {'npi_data': npi_data, 'counter_data': counter_data})
 

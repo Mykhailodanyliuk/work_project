@@ -1,38 +1,38 @@
 {% extends 'mainpage/base.html' %}
 {% block title %} NPI data {% endblock %}
 {% block content %}
-<nav class="navbar navbar-expand-lg bg-light">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="/">Main page</a>
-    </div>
-</nav>
-{% include 'mainpage/counter.html' %}
-<br>
-<form action="/npi_data_search" , method="get">
-    <div class="input-group">
-        <div class="col-xs-3">
-            <input class="form-control mr-sm-2" type="search" placeholder="Enter CIK" aria-label="Search" , name="cik">
+    <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Main page</a>
         </div>
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </div>
-</form>
-<br>
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        <th>CIK</th>
-        <th>NPI numbers</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for data in npi_data %}
+    </nav>
+    {% include 'mainpage/counter.html' %}
+    <br>
+    <form action="/npi_data_search" , method="get">
+        <div class="input-group">
+            <div class="col-xs-3">
+                <input class="form-control mr-sm-2" type="search" placeholder="Enter CIK" aria-label="Search" ,
+                       name="cik">
+            </div>
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </div>
+    </form>
+    <br>
+    <table class="table table-bordered">
+        <thead>
         <tr>
-            <td>{{ data.cik }}</td>
-            <td>{{ data.npi|join:", " }}</td>
+            <th>CIK</th>
+            <th>NPI numbers</th>
         </tr>
-    {% endfor %}
-    </tbody>
-</table>
-{% include 'mainpage/paginator.html' %}
+        </thead>
+        <tbody>
+        {% for data in npi_data %}
+            <tr>
+                <td>{{ data.cik }}</td>
+                <td>{{ data.npi|join:", " }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% include 'mainpage/paginator.html' %}
 {% endblock %}
