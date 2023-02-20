@@ -1,4 +1,5 @@
 {% extends 'mainpage/base.html' %}
+{% load tagger %}
 
 {% block title %} Drug Enforcement {% endblock %}
 {% block content %}
@@ -7,6 +8,7 @@
             <a class="navbar-brand" href="/">Main page</a>
         </div>
     </nav>
+    {% include 'mainpage/counter.html' %}
     <div class="dropdown">
         <a class="btn btn" href="#" role="button" id="dropdownMenuLink"
            data-bs-toggle="dropdown" aria-expanded="false">
@@ -14,9 +16,10 @@
         </a>
 
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-{#            <li><a class="dropdown-item" href="?order_by=recall_number">Recall Number</a></li>#}
+            <li><a class="dropdown-item" href="?order_by=recall_number">Recall Number</a></li>
             <li><a class="dropdown-item" href="?order_by=event_id">Event ID</a></li>
             <li><a class="dropdown-item" href="?order_by=recalling_firm">Recalling Firm</a></li>
+            <li><a class="dropdown-item" href="?order_by=upload_at">Date added</a></li>
         </ul>
     </div>
     <table class="table table-bordered">
@@ -25,14 +28,18 @@
             <th>Recall Number</th>
             <th>Event ID</th>
             <th>Recalling Firm</th>
+            <th>Date added</th>
         </tr>
         </thead>
         <tbody>
         {% for obj in context_data %}
             <tr>
-                <td><a href="{% url 'fda_drug_enforcement_data' obj.id %}">{{ obj.recall_number }}</a></td>
+                <td>
+                    <a href="{% url 'fda_drug_enforcement_data' context_data|get_id:forloop.counter0 %}">{{ obj.recall_number }}</a>
+                </td>
                 <td>{{ obj.event_id }}</td>
                 <td>{{ obj.recalling_firm }}</td>
+                <td>{{ obj.upload_at }}</td>
             </tr>
         {% endfor %}
         </tbody>

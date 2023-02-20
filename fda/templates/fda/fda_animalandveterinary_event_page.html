@@ -1,7 +1,7 @@
 {% extends 'mainpage/base.html' %}
 {% load tagger %}
 
-{% block title %} Device Covid-19 {% endblock %}
+{% block title %} Animal and veterinary event  {% endblock %}
 {% block content %}
     <nav class="navbar navbar-expand-lg bg-light">
         <div class="container-fluid">
@@ -16,20 +16,18 @@
         </a>
 
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <li><a class="dropdown-item" href="?order_by=sample_id">Sample ID</a></li>
-            <li><a class="dropdown-item" href="?order_by=lot_number">Lot Number</a></li>
-            <li><a class="dropdown-item" href="?order_by=device">Device</a></li>
-            <li><a class="dropdown-item" href="?order_by=manufacturer">Manufacturer</a></li>
+            <li><a class="dropdown-item" href="?order_by=unique_aer_id_number">Unique AER ID Number</a></li>
+            <li><a class="dropdown-item" href="?order_by=report_id">Report Id</a></li>
+            <li><a class="dropdown-item" href="?order_by=type_of_information">Type of information</a></li>
             <li><a class="dropdown-item" href="?order_by=upload_at">Date added</a></li>
         </ul>
     </div>
     <table class="table table-bordered">
         <thead>
         <tr>
-            <th>Sample ID</th>
-            <th>Lot Number</th>
-            <th>Device</th>
-            <th>Manufacturer</th>
+            <th>Unique AER ID Number</th>
+            <th>Report Id</th>
+            <th>Type of information</th>
             <th>Date added</th>
         </tr>
         </thead>
@@ -37,11 +35,10 @@
         {% for obj in context_data %}
             <tr>
                 <td>
-                    <a href="{% url 'fda_device_covid19_data' context_data|get_id:forloop.counter0 %}">{{ obj.sample_id }}</a>
+                    <a href="{% url 'fda_animalandveterinary_event_data' context_data|get_id:forloop.counter0 %}">{{ obj.unique_aer_id_number }}</a>
                 </td>
-                <td>{{ obj.lot_number }}</td>
-                <td>{{ obj.device }}</td>
-                <td>{{ obj.manufacturer }}</td>
+                <td>{{ obj.report_id}}</td>
+                <td>{{ obj.type_of_information }}</td>
                 <td>{{ obj.upload_at }}</td>
             </tr>
         {% endfor %}

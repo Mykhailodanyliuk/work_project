@@ -1,7 +1,7 @@
 {% extends 'mainpage/base.html' %}
 {% load tagger %}
 
-{% block title %} Device Covid-19 {% endblock %}
+{% block title %} Other substance {% endblock %}
 {% block content %}
     <nav class="navbar navbar-expand-lg bg-light">
         <div class="container-fluid">
@@ -16,20 +16,18 @@
         </a>
 
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <li><a class="dropdown-item" href="?order_by=sample_id">Sample ID</a></li>
-            <li><a class="dropdown-item" href="?order_by=lot_number">Lot Number</a></li>
-            <li><a class="dropdown-item" href="?order_by=device">Device</a></li>
-            <li><a class="dropdown-item" href="?order_by=manufacturer">Manufacturer</a></li>
+            <li><a class="dropdown-item" href="?order_by=uuid">UUID</a></li>
+            <li><a class="dropdown-item" href="?order_by=unii">UNII</a></li>
+            <li><a class="dropdown-item" href="?order_by=substance_class">Substance Class</a></li>
             <li><a class="dropdown-item" href="?order_by=upload_at">Date added</a></li>
         </ul>
     </div>
     <table class="table table-bordered">
         <thead>
         <tr>
-            <th>Sample ID</th>
-            <th>Lot Number</th>
-            <th>Device</th>
-            <th>Manufacturer</th>
+            <th>UUID</th>
+            <th>UNII</th>
+            <th>Substance Class</th>
             <th>Date added</th>
         </tr>
         </thead>
@@ -37,11 +35,10 @@
         {% for obj in context_data %}
             <tr>
                 <td>
-                    <a href="{% url 'fda_device_covid19_data' context_data|get_id:forloop.counter0 %}">{{ obj.sample_id }}</a>
+                    <a href="{% url 'fda_other_substance_data' context_data|get_id:forloop.counter0 %}">{{ obj.uuid }}</a>
                 </td>
-                <td>{{ obj.lot_number }}</td>
-                <td>{{ obj.device }}</td>
-                <td>{{ obj.manufacturer }}</td>
+                <td>{{ obj.unii }}</td>
+                <td>{{ obj.substance_class }}</td>
                 <td>{{ obj.upload_at }}</td>
             </tr>
         {% endfor %}

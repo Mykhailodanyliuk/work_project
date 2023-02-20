@@ -10,7 +10,6 @@ def hhs_page(request):
 def hhs_data_page(request, npi_id):
     nppes_data_entities_collection = parsers.get_collection_from_db('db', 'nppes_data_entities')
     nppes_data_individual_collection = parsers.get_collection_from_db('db', 'nppes_data_individual')
-    update_collection = parsers.get_collection_from_db('db', 'update_collection')
     col = parsers.get_collection_from_db('db', 'nppes_data')
     nppes_npi_data = col.find_one({'npi': str(npi_id)})
     if nppes_data_individual_collection.find_one({'npi': str(npi_id)}):
@@ -42,7 +41,7 @@ def display_hhs_data_entities(request):
     collection_count_documents = counter_data.get('total_records') if counter_data else 1
     paginator = mongo_paginator(request, collection_count_documents, 500)
     part_npi = nppes_data_entities_collection.find({}, {'_id': 0, 'npi': 1,
-                                                        'data.provider_organization_name__legal_business_name_ ': 1,
+                                                        'data.provider_organization_name__legal_business_name_': 1,
                                                         'upload_at': 1}).sort('npi').skip(
         500 * (int(request.GET.get('page', 1)) - 1)).limit(500)
     return render(request, 'hhs/nppes_entities.html',

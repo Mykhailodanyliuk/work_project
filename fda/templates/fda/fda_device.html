@@ -1,4 +1,5 @@
 {% extends 'mainpage/base.html' %}
+{% load tagger %}
 
 {% block title %} Device {% endblock %}
 {% block content %}
@@ -7,6 +8,7 @@
             <a class="navbar-brand" href="/">Main page</a>
         </div>
     </nav>
+    {% include 'mainpage/counter.html' %}
     <div class="dropdown">
         <a class="btn btn" href="#" role="button" id="dropdownMenuLink"
            data-bs-toggle="dropdown" aria-expanded="false">
@@ -17,6 +19,7 @@
             <li><a class="dropdown-item" href="?order_by=name">Name</a></li>
             <li><a class="dropdown-item" href="?order_by=k_number">K Number</a></li>
             <li><a class="dropdown-item" href="?order_by=applicant">Applicant</a></li>
+            <li><a class="dropdown-item" href="?order_by=upload_at">Date added</a></li>
         </ul>
     </div>
     <table class="table table-bordered">
@@ -25,14 +28,16 @@
             <th>Name</th>
             <th>K Number</th>
             <th>Applicant</th>
+            <th>Date added</th>
         </tr>
         </thead>
         <tbody>
         {% for device in context_data %}
             <tr>
-                <td><a href="{% url 'fda_device_data' device.id %}">{{ device.name }}</a></td>
+                <td><a href="{% url 'fda_device_data' context_data|get_id:forloop.counter0 %}">{{ device.device_name }}</a></td>
                 <td>{{ device.k_number }}</td>
                 <td>{{ device.applicant }}</td>
+                <td>{{ device.upload_at }}</td>
             </tr>
         {% endfor %}
         </tbody>

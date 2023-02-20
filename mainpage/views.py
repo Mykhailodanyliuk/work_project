@@ -34,7 +34,7 @@ def npi_data_search(request):
 
 def mongo_paginator(request, count_docs, per_page):
     page = request.GET.get('page', 1)
-    num_pages = count_docs // per_page + 1
+    num_pages = count_docs // per_page + 1 if count_docs != per_page else 1
     page_range = range(1, num_pages + 1)
     has_previous = True if int(page) > 1 else False
     number = int(page)
@@ -47,3 +47,18 @@ def mongo_paginator(request, count_docs, per_page):
         'has_next': has_next,
         'next_page_number': next_page_number}
     return paginator
+
+
+def get_sorted_data(request, collection, default_ordering, amount_data, keys):
+    data_collection = parsers.get_collection_from_db('db', collection)
+    update_collection = parsers.get_collection_from_db('db', 'update_collection')
+    counter_data = update_collection.find_one({'name': collection})
+    collection_count_documents = counter_data.get('total_records') if counter_data else 1
+    order_by = request.GET.get('order_by') if (request.GET.get('order_by') is not None) else default_ordering
+    page = int(request.GET.get('page', 1))
+    paginator = mongo_paginator(request, collection_count_documents, amount_data)
+    find_keys = {key: 1 for key in keys}
+    context_data = list(
+        data_collection.find({}, find_keys).sort(
+            order_by).skip(amount_data * (page - 1)).limit(amount_data))
+    return {'context_data': context_data, 'paginator': paginator, 'order_by': order_by, 'counter_data': counter_data}

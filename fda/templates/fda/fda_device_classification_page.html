@@ -1,4 +1,5 @@
 {% extends 'mainpage/base.html' %}
+{% load tagger %}
 
 {% block title %} Device Enforcement {% endblock %}
 {% block content %}
@@ -7,6 +8,7 @@
             <a class="navbar-brand" href="/">Main page</a>
         </div>
     </nav>
+    {% include 'mainpage/counter.html' %}
     <div class="dropdown">
         <a class="btn btn" href="#" role="button" id="dropdownMenuLink"
            data-bs-toggle="dropdown" aria-expanded="false">
@@ -17,6 +19,7 @@
             <li><a class="dropdown-item" href="?order_by=device_name">Device Model</a></li>
             <li><a class="dropdown-item" href="?order_by=medical_specialty_description">Medical Specialty Description</a></li>
             <li><a class="dropdown-item" href="?order_by=regulation_number">Regulation Number</a></li>
+            <li><a class="dropdown-item" href="?order_by=upload_at">Date added</a></li>
         </ul>
     </div>
     <table class="table table-bordered">
@@ -25,14 +28,16 @@
             <th>Device Model</th>
             <th>Medical Specialty Description</th>
             <th>Regulation Number</th>
+            <th>Date added</th>
         </tr>
         </thead>
         <tbody>
         {% for obj in context_data %}
             <tr>
-                <td><a href="{% url 'fda_device_classification_data' obj.id %}">{{ obj.device_name }}</a></td>
+                <td><a href="{% url 'fda_device_classification_data' context_data|get_id:forloop.counter0 %}">{{ obj.device_name }}</a></td>
                 <td>{{ obj.medical_specialty_description }}</td>
                 <td>{{ obj.regulation_number }}</td>
+                <td>{{ obj.upload_at }}</td>
             </tr>
         {% endfor %}
         </tbody>

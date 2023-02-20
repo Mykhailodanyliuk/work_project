@@ -1,4 +1,5 @@
 {% extends 'mainpage/base.html' %}
+{% load tagger %}
 
 {% block title %} USPTO {% endblock %}
 {% block content %}
@@ -14,8 +15,9 @@
         </a>
 
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <li><a class="dropdown-item" href="?order_by=patent_application_number">Patent Application Number</a></li>
-            <li><a class="dropdown-item" href="?order_by=invention_title">Invention Title</a></li>
+            <li><a class="dropdown-item" href="?order_by=patentApplicationNumber">Patent Application Number</a></li>
+            <li><a class="dropdown-item" href="?order_by=inventionTitle">Invention Title</a></li>
+            <li><a class="dropdown-item" href="?order_by=upload_at">Date added</a></li>
         </ul>
     </div>
     <table class="table table-bordered">
@@ -29,8 +31,8 @@
         <tbody>
         {% for obj in context_data %}
             <tr>
-                <td><a href="{% url 'uspto_patent_data' obj.id %}">{{ obj.patent_application_number }}</a></td>
-                <td>{{ obj.invention_title }}</td>
+                <td><a href="{% url 'uspto_patent_data' context_data|get_id:forloop.counter0 %}">{{ obj.patentApplicationNumber }}</a></td>
+                <td>{{ obj.inventionTitle }}</td>
                 <td>{{ obj.upload_at }}</td>
             </tr>
         {% endfor %}

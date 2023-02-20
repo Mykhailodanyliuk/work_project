@@ -1,4 +1,5 @@
 {% extends 'mainpage/base.html' %}
+{% load tagger %}
 
 {% block title %} Device Registration Listings {% endblock %}
 {% block content %}
@@ -7,6 +8,7 @@
             <a class="navbar-brand" href="/">Main page</a>
         </div>
     </nav>
+    {% include 'mainpage/counter.html' %}
     <div class="dropdown">
         <a class="btn btn" href="#" role="button" id="dropdownMenuLink"
            data-bs-toggle="dropdown" aria-expanded="false">
@@ -17,6 +19,7 @@
             <li><a class="dropdown-item" href="?order_by=registration_number">Registration Number</a></li>
             <li><a class="dropdown-item" href="?order_by=fei_number">Fei Number</a></li>
             <li><a class="dropdown-item" href="?order_by=name">Name</a></li>
+            <li><a class="dropdown-item" href="?order_by=upload_at">Date added</a></li>
         </ul>
     </div>
     <table class="table table-bordered">
@@ -25,14 +28,18 @@
             <th>Registration Number</th>
             <th>Fei Number</th>
             <th>Name</th>
+            <th>Date added</th>
         </tr>
         </thead>
         <tbody>
         {% for obj in context_data %}
             <tr>
-                <td><a href="{% url 'fda_device_registration_listings_data' obj.id %}">{{ obj.registration_number }}</a></td>
-                <td>{{ obj.fei_number }}</td>
-                <td>{{ obj.name }}</td>
+                <td>
+                    <a href="{% url 'fda_device_registration_listings_data' context_data|get_id:forloop.counter0 %}">{{ obj.registration.registration_number }}</a>
+                </td>
+                <td>{{ obj.registration.fei_number }}</td>
+                <td>{{ obj.registration.name }}</td>
+                <td>{{ obj.upload_at }}</td>
             </tr>
         {% endfor %}
         </tbody>
