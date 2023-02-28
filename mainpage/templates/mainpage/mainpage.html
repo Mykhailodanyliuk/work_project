@@ -1,54 +1,101 @@
 {% extends 'mainpage/base.html' %}
-
 {% block title %}Main page{% endblock %}
-
+<style>
+    .myclass {
+        border-left: 100px;
+    }
+</style>
 {% block content %}
-    <ul class="nav justify-content-center">
-        <li class="nav-item">
-            <a class="btn btn-secondary" href="sec/sec_company_tickers" role="button" aria-expanded="false">SEC Company Tickers</a>
-        </li>
-        <li class="nav-item">
-            <a class="btn btn-secondary" href="sec/sec_company_fillings" role="button" aria-expanded="false">SEC Company Fillings</a>
-        </li>
-        <li class="nav-item">
-            <a class="btn btn-secondary" href="npi_data" role="button" aria-expanded="false">NPI (third-party sources)</a>
-        </li>
-        <li class="nav-item">
-            <a class="btn btn-secondary" href="hhs/" role="button" aria-expanded="false">HHS(NPI)</a>
-        </li>
-        <li>
-            <a class="btn btn-secondary" href="clinical_trials" role="button" aria-expanded="false">Clinical Trials</a>
-        </li>
-        <div class="dropdown">
-            <a class="btn btn-secondary" href="#" role="button" id="dropdownMenuLink"
-               data-bs-toggle="dropdown" aria-expanded="false">
-                FDA.GOV
-            </a>
+    <div class="row">
+        <div class="container col-md-auto">
+            <ul class="nav ">
+                <li>
+                    <div class="dropdown">
+                        <a class="btn btn-secondary" href="#" role="button" id="dropdownMenuLink"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            SEC
+                        </a>
 
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <li><a class="dropdown-item" href="fda/animalandveterinary_event">Animal and Veterinary Event</a></li>
-                <li><a class="dropdown-item" href="fda/device_event">Device Event</a></li>
-                <li><a class="dropdown-item" href="fda/device">Device</a></li>
-                <li><a class="dropdown-item" href="fda/device_enforcement">Device Enforcement</a></li>
-                <li><a class="dropdown-item" href="fda/device_recall">Device Recall</a></li>
-                <li><a class="dropdown-item" href="fda/device_classification">Device Classification</a></li>
-                <li><a class="dropdown-item" href="fda/device_covid19">Device Covid-19</a></li>
-                <li><a class="dropdown-item" href="fda/device_pma">Device PMA</a></li>
-                <li><a class="dropdown-item" href="fda/device_registration_listings">Device Registration Listings</a></li>
-                <li><a class="dropdown-item" href="fda/device_udi">Device UDI</a></li>
-                <li><a class="dropdown-item" href="fda/drug_enforcement">Drug Enforcement</a></li>
-                <li><a class="dropdown-item" href="fda/drug_event">Drug Event</a></li>
-                <li><a class="dropdown-item" href="fda/drug_ndc">Drug NDC</a></li>
-                <li><a class="dropdown-item" href="fda/drug_label">Drug Label</a></li>
-                <li><a class="dropdown-item" href="fda/food_enforcement">Food Enforcement</a></li>
-                <li><a class="dropdown-item" href="fda/food_event">Food Event</a></li>
-                <li><a class="dropdown-item" href="fda/other_nsde">Other NSDE</a></li>
-                <li><a class="dropdown-item" href="fda/other_substance">Other Substance</a></li>
-                <li><a class="dropdown-item" href="fda/tobacco_problem">Tobacco Problem</a></li>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <li><a class="dropdown-item" href="sec/sec_company_tickers" role="button"
+                                   aria-expanded="false">SEC
+                                Company
+                                Tickers</a></li>
+                            <li><a class="dropdown-item" href="sec/sec_company_fillings" role="button"
+                                   aria-expanded="false">SEC
+                                Company
+                                Fillings</a></li>
+                            <li><a class="dropdown-item" href="{% url 'sic_codes' %}">Sic codes</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-secondary" href="npi_data" role="button" aria-expanded="false">NPI
+                        (third-party
+                        sources)</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-secondary" href="hhs/" role="button" aria-expanded="false">HHS(NPI)</a>
+                </li>
+                <li>
+                    <a class="btn  btn-secondary" href="clinical_trials" role="button" aria-expanded="false">Clinical
+                        Trials</a>
+                </li>
+                <li>
+                    <div class="dropdown">
+                        <a class="btn btn-secondary" href="#" role="button" id="dropdownMenuLink"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            FDA.GOV
+                        </a>
+
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <li><a class="dropdown-item" href="fda/animalandveterinary_event">Animal and Veterinary
+                                Event</a></li>
+                            <li><a class="dropdown-item" href="fda/device_event">Device Event</a></li>
+                            <li><a class="dropdown-item" href="fda/device">Device</a></li>
+                            <li><a class="dropdown-item" href="fda/device_enforcement">Device Enforcement</a></li>
+                            <li><a class="dropdown-item" href="fda/device_recall">Device Recall</a></li>
+                            <li><a class="dropdown-item" href="fda/device_classification">Device Classification</a></li>
+                            <li><a class="dropdown-item" href="fda/device_covid19">Device Covid-19</a></li>
+                            <li><a class="dropdown-item" href="fda/device_pma">Device PMA</a></li>
+                            <li><a class="dropdown-item" href="fda/device_registration_listings">Device Registration
+                                Listings</a>
+                            </li>
+                            <li><a class="dropdown-item" href="fda/device_udi">Device UDI</a></li>
+                            <li><a class="dropdown-item" href="fda/drug_enforcement">Drug Enforcement</a></li>
+                            <li><a class="dropdown-item" href="fda/drug_event">Drug Event</a></li>
+                            <li><a class="dropdown-item" href="fda/drug_ndc">Drug NDC</a></li>
+                            <li><a class="dropdown-item" href="fda/drug_label">Drug Label</a></li>
+                            <li><a class="dropdown-item" href="fda/food_enforcement">Food Enforcement</a></li>
+                            <li><a class="dropdown-item" href="fda/food_event">Food Event</a></li>
+                            <li><a class="dropdown-item" href="fda/other_nsde">Other NSDE</a></li>
+                            <li><a class="dropdown-item" href="fda/other_substance">Other Substance</a></li>
+                            <li><a class="dropdown-item" href="fda/tobacco_problem">Tobacco Problem</a></li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li>
+                    <a class="btn btn-secondary" href="uspto" role="button" aria-expanded="false">USPTO</a>
+                </li>
+
+
             </ul>
         </div>
-        <li>
-            <a class="btn btn-secondary" href="uspto" role="button" aria-expanded="false">USPTO</a>
-        </li>
-    </ul>
+
+        <div class="col-md-auto">
+            {% if request.user.is_authenticated %}
+                <a class="btn btn-secondary" href="{% url 'user_logout' %}">Log out</a>
+            {% else %}
+                <a class="btn btn-secondary" href="{% url 'user_login' %}">Log in</a>
+{#                <a class="btn btn-secondary" href="{% url 'registration' %}">Sign in</a>#}
+            {% endif %}
+        </div>
+    </div>
+
+
+
 {% endblock %}
+
+
+

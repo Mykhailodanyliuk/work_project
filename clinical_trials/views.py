@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render
 from mainpage import parsers
@@ -5,7 +6,7 @@ from mainpage import parsers
 clinical_trial_organizations_collection = parsers.get_collection_from_db('db', 'clinical_trials_organizations')
 clinical_trials_collection = parsers.get_collection_from_db('db', 'clinical_trials')
 
-
+@login_required(login_url='user_login')
 def display_clinical_trials_organizations(request):
     organizations_and_id = [[organization.get('organization').replace(' ', '_'), organization.get('organization')]
                             for organization in
@@ -23,17 +24,17 @@ def display_clinical_trials_organizations(request):
                   context={'dataset': part_organizations, 'count': count_organizations,
                            'paginator': part_organizations})
 
-
+@login_required(login_url='user_login')
 def display_organization_trials(request, org_id):
     my_list = list(clinical_trial_organizations_collection.find({'organization': org_id.replace('_', ' ')}))
     return render(request, 'clinical_trials/organization_clinical_trials.html', context={'dataset': my_list[0]})
 
-
+@login_required(login_url='user_login')
 def display_clinical_trial(request, trial_id):
     data = clinical_trials_collection.find_one({'nct_id': trial_id})
     return render(request, 'clinical_trials/clinical_trial.html', context={'dataset': data})
 
-
+@login_required(login_url='user_login')
 def clinical_trials_organization_search(request):
     organization = request.GET['organization']
     dataset = [[organization.get('organization').replace(' ', '_'), organization.get('organization')]

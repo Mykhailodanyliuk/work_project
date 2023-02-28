@@ -28,6 +28,8 @@
             <th>Recall Number</th>
             <th>Event ID</th>
             <th>Recalling Firm</th>
+            <th>Termination Date</th>
+            <th>Recall Initiation Date</th>
             <th>Date added</th>
         </tr>
         </thead>
@@ -39,6 +41,8 @@
                 </td>
                 <td>{{ obj.event_id }}</td>
                 <td>{{ obj.recalling_firm }}</td>
+                <td>{{ obj.termination_date}}</td>
+                <td>{{ obj.recall_initiation_date }}</td>
                 <td>{{ obj.upload_at }}</td>
             </tr>
         {% endfor %}

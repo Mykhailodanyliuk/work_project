@@ -1,12 +1,13 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from mainpage import parsers
 from mainpage.views import mongo_paginator
 
-
+@login_required(login_url='user_login')
 def hhs_page(request):
     return render(request, 'hhs/nppes_list_data.html')
 
-
+@login_required(login_url='user_login')
 def hhs_data_page(request, npi_id):
     nppes_data_entities_collection = parsers.get_collection_from_db('db', 'nppes_data_entities')
     nppes_data_individual_collection = parsers.get_collection_from_db('db', 'nppes_data_individual')
@@ -19,7 +20,7 @@ def hhs_data_page(request, npi_id):
     if nppes_npi_data:
         return render(request, 'hhs/nppes_data.html', context={'dataset': nppes_npi_data.get('data')})
 
-
+@login_required(login_url='user_login')
 def display_hhs_data_individual(request):
     nppes_data_individual_collection = parsers.get_collection_from_db('db', 'nppes_data_individual')
     update_collection = parsers.get_collection_from_db('db', 'update_collection')
@@ -33,7 +34,7 @@ def display_hhs_data_individual(request):
     return render(request, 'hhs/nppes_individual.html',
                   context={'dataset': part_npi, 'paginator': paginator, 'counter_data': counter_data})
 
-
+@login_required(login_url='user_login')
 def display_hhs_data_entities(request):
     nppes_data_entities_collection = parsers.get_collection_from_db('db', 'nppes_data_entities')
     update_collection = parsers.get_collection_from_db('db', 'update_collection')
@@ -47,7 +48,7 @@ def display_hhs_data_entities(request):
     return render(request, 'hhs/nppes_entities.html',
                   context={'dataset': part_npi, 'paginator': paginator, 'counter_data': counter_data})
 
-
+@login_required(login_url='user_login')
 def hhs_data_search(request):
     nppes_data_entities_collection = parsers.get_collection_from_db('db', 'nppes_data_entities')
     nppes_data_individual_collection = parsers.get_collection_from_db('db', 'nppes_data_individual')

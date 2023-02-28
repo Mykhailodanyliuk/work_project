@@ -1,5 +1,9 @@
+from django.contrib import messages
+from django.contrib.auth import login, logout
 from django.shortcuts import render
 from . import parsers
+from django.shortcuts import render, redirect
+from .forms import UserRegisterForm, UserLoginForm
 
 
 def error_404(request, exception):
@@ -62,3 +66,40 @@ def get_sorted_data(request, collection, default_ordering, amount_data, keys):
         data_collection.find({}, find_keys).sort(
             order_by).skip(amount_data * (page - 1)).limit(amount_data))
     return {'context_data': context_data, 'paginator': paginator, 'order_by': order_by, 'counter_data': counter_data}
+
+
+def registration(request):
+    if request.method == 'POST':
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, "Ви успішно зареєстровані")
+            return redirect('main_page')
+        else:
+            messages.error(request, 'Помилка реєстрації')
+    else:
+        form = UserRegisterForm()
+    return render(request, 'mainpage/registration.html', {'form': form})
+
+
+def user_login(request):
+    if request.method == 'POST':
+        form = UserLoginForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            messages.success(request, "You are logged in")
+            return redirect('main_page')
+        else:
+            messages.error(request, 'You entered an incorrect username or password')
+            print(messages)
+    else:
+        form = UserLoginForm
+
+    return render(request, 'mainpage/login.html', {"form": form})
+
+
+def user_logout(request):
+    logout(request)
+    return redirect('main_page')

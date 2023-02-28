@@ -1,0 +1,39 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'mainpage/css/login.css' %}">
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+{% block content %}
+    <div class="login-container">
+        <div class="row">
+            <div class="col-md-6 login-form-1">
+                <h3>Login</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ form.username }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.password }}
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" class="btnSubmit" value="Login"/>
+                    </div>
+{#                    <div class="form-group">#}
+{#                        <a href="{% url 'registration' %}" class="ForgetPwd">Sign up</a>#}
+{#                    </div>#}
+                    {% if messages %}
+
+                        {% for message in messages %}
+                            {% if message.tags == 'error' %}
+                                <div role="alert">
+                                    <h6>{{ message }}</h6>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

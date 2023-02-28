@@ -24,6 +24,7 @@
         <thead>
         <tr>
             <th>Report Number</th>
+            <th>Products</th>
             <th>Date added</th>
         </tr>
         </thead>
@@ -33,6 +34,7 @@
                 <td>
                     <a href="{% url 'fda_food_event_data' context_data|get_id:forloop.counter0 %}">{{ obj.report_number }}</a>
                 </td>
+                <td>{{ obj.products }}</td>
                 <td>{{ obj.upload_at }}</td>
             </tr>
         {% endfor %}
