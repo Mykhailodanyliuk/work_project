@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from . import parsers
 from django.shortcuts import render, redirect
@@ -18,6 +19,7 @@ def index(request):
     return render(request, 'mainpage/mainpage.html')
 
 
+@login_required(login_url='user_login')
 def get_list_npi_data(request):
     update_collection = parsers.get_collection_from_db('db', 'update_collection')
     npi_data_collection = parsers.get_collection_from_db('db', 'npi_data')
@@ -28,6 +30,7 @@ def get_list_npi_data(request):
                   {'npi_data': npi_data, 'counter_data': counter_data})
 
 
+@login_required(login_url='user_login')
 def npi_data_search(request):
     cik = request.GET['cik']
     npi_data_collection = parsers.get_collection_from_db('db', 'npi_data')
