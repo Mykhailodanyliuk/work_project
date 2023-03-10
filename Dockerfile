@@ -25,4 +25,4 @@ RUN pip install gunicorn
 
 USER yt
 
-CMD ["gunicorn", "-b", "0.0.0.0:8001", "medical_site.wsgi:application"]
+CMD ["gunicorn", "-b", "0.0.0.0:8000", "medical_site.wsgi:application"]

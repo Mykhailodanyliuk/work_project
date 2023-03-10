@@ -8,17 +8,17 @@ services:
     volumes:
       - static:/yt/static
     command: > 
-      bash -c "python3 ./manage.py collectstatic --noinput && python ./manage.py migrate  && gunicorn -b 0.0.0.0:8005 medical_site.wsgi:application"
-    ports:
-      - "8005:8005"
+      bash -c "python3 ./manage.py collectstatic --noinput && python ./manage.py migrate  && gunicorn -b 0.0.0.0:8000 medical_site.wsgi:application"
   nginx:
-    image: nginx:latest
+    build:
+      dockerfile: ./Dockerfile
+      context: ./docker/nginx/
+    volumes:
+      - static:/yt/static
     depends_on:
       - web
     ports:
-      - "80:80"
-    volumes:
-      - .nginx-conf.d:/etc/nginx/conf.d
-      - static:/yt/static
+      - "8080:80"
+
 volumes:
   static:
