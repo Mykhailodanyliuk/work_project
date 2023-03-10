@@ -7,13 +7,13 @@ import pytz
 
 
 def drop_collection_from_db(data_base, collection):
-    client = pymongo.MongoClient('mongodb://localhost:27017')
+    client = pymongo.MongoClient('mongodb://127.0.0.1:27017')
     db = client[data_base]
     db.drop_collection(collection)
 
 
 def get_collection_from_db(data_base, collection):
-    client = pymongo.MongoClient('mongodb://localhost:27017')
+    client = pymongo.MongoClient('mongodb://127.0.0.1:27017')
     db = client[data_base]
     return db[collection]
 
