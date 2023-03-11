@@ -3,9 +3,11 @@ from django.shortcuts import render
 from mainpage import parsers
 from mainpage.views import mongo_paginator
 
+
 @login_required(login_url='user_login')
 def hhs_page(request):
     return render(request, 'hhs/nppes_list_data.html')
+
 
 @login_required(login_url='user_login')
 def hhs_data_page(request, npi_id):
@@ -20,6 +22,7 @@ def hhs_data_page(request, npi_id):
     if nppes_npi_data:
         return render(request, 'hhs/nppes_data.html', context={'dataset': nppes_npi_data.get('data')})
 
+
 @login_required(login_url='user_login')
 def display_hhs_data_individual(request):
     nppes_data_individual_collection = parsers.get_collection_from_db('db', 'nppes_data_individual')
@@ -29,10 +32,12 @@ def display_hhs_data_individual(request):
     paginator = mongo_paginator(request, collection_count_documents, 500)
     part_npi = nppes_data_individual_collection.find({},
                                                      {'_id': 0, 'npi': 1, 'data.provider_first_name': 1,
-                                                      'data.provider_last_name__legal_name_': 1, 'upload_at': 1}).sort('npi').skip(
+                                                      'data.provider_last_name__legal_name_': 1, 'upload_at': 1}).sort(
+        'npi').skip(
         500 * (int(request.GET.get('page', 1)) - 1)).limit(500)
     return render(request, 'hhs/nppes_individual.html',
                   context={'dataset': part_npi, 'paginator': paginator, 'counter_data': counter_data})
+
 
 @login_required(login_url='user_login')
 def display_hhs_data_entities(request):
@@ -47,6 +52,7 @@ def display_hhs_data_entities(request):
         500 * (int(request.GET.get('page', 1)) - 1)).limit(500)
     return render(request, 'hhs/nppes_entities.html',
                   context={'dataset': part_npi, 'paginator': paginator, 'counter_data': counter_data})
+
 
 @login_required(login_url='user_login')
 def hhs_data_search(request):
