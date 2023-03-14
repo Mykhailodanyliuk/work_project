@@ -7,22 +7,24 @@ from medical_site.settings import BASE_DIR, env
 from . import parsing_tools
 import pytz
 from ssh_pymongo import MongoSession
+
 # def drop_collection_from_db(data_base, collection):
 #     client = pymongo.MongoClient('mongodb://host.docker.internal:27017')
 #     db = client[data_base]
 #     db.drop_collection(collection)
 
+session = MongoSession(
+    host=env('MONGO_HOST'),
+    port=2222,
+    user=env('MONGO_USER'),
+    password=env('MONGO_PASSWORD'),
+)
+
 
 def get_collection_from_db(data_base, collection):
-    # client = pymongo.MongoClient('mongodb://host.docker.internal:27017')
+    # client = pymongo.MongoClient('mongodb://localhost:27017')
     # db = client[data_base]
     # return db[collection]
-    session = MongoSession(
-        host=env('MONGO_HOST'),
-        port=2222,
-        user=env('MONGO_USER'),
-        password=env('MONGO_PASSWORD'),
-    )
 
     db = session.connection[data_base]
     return db[collection]
