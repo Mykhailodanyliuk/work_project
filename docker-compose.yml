@@ -20,5 +20,6 @@ services:
     ports:
       - "80:80"
 
+
 volumes:
   static:
